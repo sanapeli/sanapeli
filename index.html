@@ -2130,9 +2130,16 @@ body {
 	
 }
 
+#possible_list {
+	color:#FFFFFF;
+	font-size:30px;
+}
+
 
 #scores {
-	
+	color:#FFFF00;
+	font-size:30px;
+	margin-top:20px;
 }
 
 .blink_me .letter {
@@ -2161,8 +2168,10 @@ body {
 	<div id="clear_guess" class="button disabled">Tyhjennä</div>
 </div>
 <br>
-Mahdolliset sanat <span id="possible_count"></span>:<br>
-<div id="possible_words"></div>
+<div id="possible_list">
+<span id="possible_count"></span><br>
+<div id="possible_words" style="display:none"></div>
+</div>
 
 <br>
 <div id="result"></div>
@@ -2526,8 +2535,8 @@ function new_random_word(){
 	POSSIBLE.sort(sort_by_length_desc);
 	POSSIBLE.shift();
 	
-	$('#possible_words').html(POSSIBLE.join(", "));
-	$('#possible_count').html("("+POSSIBLE.length+")");
+	//$('#possible_words').html(POSSIBLE.join(", "));
+	$('#possible_count').html("Mahdollisia sanoja: "+POSSIBLE.length+" kpl");
 	
 	render_guess();
 }
