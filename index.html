@@ -2048,6 +2048,18 @@ body {
 	font:35px verdana;
 }
 
+
+
+html, body, #loading_container {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+
+
+
 .noselect {
   -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -2088,8 +2100,29 @@ body {
 }
 #game {
 	text-align:right;
-	margin:180px 0px 0px 5px;
+	padding:180px 0px 0px 5px;
+	
+
+	background: rgb(27,48,110);
+	
+	background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%), linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(101,0,177,1) 25%, rgba(255,0,0,1) 50%, rgba(112,0,0,1) 75%, rgba(0,0,0,1) 100%);
+	
+	background-size: 100% 50%;
+	background-position: 50% 50%;
+	
+	animation: gradient 10s ease infinite;
 }
+
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 0%;
+	}
+	100% {
+		background-position: 0% -1000%;
+	}
+}
+
 .button {
 	border:1px solid #3d499b;
 	border-radius: 6px;
