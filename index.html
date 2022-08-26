@@ -2033,6 +2033,8 @@ background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMA
 	min-height:40px;
 	display:inline-block;
 	background-size:100% 100%;
+	position: relative;
+	top: -18px;
 }
 
 .invisible {
@@ -2156,6 +2158,48 @@ body {
 	}
 }
 
+.blink_me .letter {
+	animation: blinker 0.1s linear infinite;
+	animation-iteration-count: 7;
+}
+
+@keyframes blinker {  
+	50% {
+		opacity: 0;
+		color:#0000FF;
+		background-color:#0000FF;
+		border-color:#0000FF;
+	}
+}
+
+#curscore {
+	opacity:0;
+	min-height:80px;
+}
+
+.scoreblink {
+	animation: score_blinker 0.1s ease-out;
+	animation-iteration-count: 7;
+	animation-fill-mode: forwards;
+}
+
+@keyframes score_blinker {  
+	0% {
+		opacity: 0;
+		color:#FFFF00;
+	}
+	50% {
+		opacity: 1;
+		color:#FFFF00;
+	}
+	100% {
+		opacity: 0;
+		color:#FF0000;
+	}
+}
+
+
+
 </style>
 
 <div id="game" class="noselect">
@@ -2163,7 +2207,7 @@ body {
 	<br>
 	<div id="word_from" class="letterbox"></div>
 	<br>
-	<div id="current_guess" class="letterbox"></div><div class="really invisible"></div>
+	<div id="current_guess" class="letterbox"></div><div id="curscore"></div><span class="really invisible"></span>
 	<br>
 	<div id="clear_guess" class="button disabled">Tyhjennä</div>
 </div>
@@ -2188,7 +2232,7 @@ var CURWORD = "";
 var GUESSED = {}; // GUESSED[CURWORD] = [words made of letters used in CURWORD];
 
 var MIN_LEN = 4;
-var MAX_LEN = 10;
+var MAX_LEN = 7;
 
 var GUESS = [];
 var POSSIBLE = [];
@@ -2448,7 +2492,7 @@ $(document).on("click", ".letter", function(e){
 
 
 	$("#current_guess").removeClass("blink_me");
-
+	$("#curscore").removeClass("scoreblink");
 	
 	if(GUESS_STR == CURWORD){
 		sound = "really";
@@ -2464,7 +2508,9 @@ $(document).on("click", ".letter", function(e){
 				sound = "score";
 				$("#current_guess").addClass("blink_me");
 				GUESSED[CURWORD].push(GUESS_STR);
-				player_score++;
+				player_score += GUESS_STR.length;
+				$("#curscore").html("+"+GUESS_STR.length);
+				$("#curscore").addClass("scoreblink");
 			}
 		}
 	}
