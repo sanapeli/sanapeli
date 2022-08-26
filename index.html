@@ -2087,7 +2087,8 @@ body {
 	background-color:#FF0000;
 }
 #game {
-	margin:2px;
+	text-align:right;
+	margin:60px 0px 0px 5px;
 }
 .button {
 	border:1px solid #3d499b;
@@ -2118,7 +2119,7 @@ body {
 
 
 #new_word {
-	margin-bottom:10px;
+	margin-bottom:40px;
 }
 #word_from {
 	margin-bottom:10px;
@@ -2128,8 +2129,13 @@ body {
 	margin-bottom:10px;
 	min-height:100px;
 }
+
 #clear_guess {
 	
+}
+
+#clear_guess_wrap {
+
 }
 
 #possible_list {
@@ -2142,6 +2148,7 @@ body {
 	color:#FFFF00;
 	font-size:30px;
 	margin-top:20px;
+	margin-bottom:20px;
 }
 
 .blink_me .letter {
@@ -2203,22 +2210,25 @@ body {
 </style>
 
 <div id="game" class="noselect">
-	<div id="new_word" class="button">Uusi&nbsp;sana</div><div id="scores"></div>
-	<br>
+	<div style="width:100%; text-align:left">
+	<div id="scores"></div>
+	</div>
+	<div id="new_word" class="button">Uusi&nbsp;sana</div>
 	<div id="word_from" class="letterbox"></div>
-	<br>
 	<div id="current_guess" class="letterbox"></div><div id="curscore"></div><span class="really invisible"></span>
 	<br>
-	<div id="clear_guess" class="button disabled">Tyhjennä</div>
-</div>
-<br>
-<div id="possible_list">
-<span id="possible_count"></span><br>
-<div id="possible_words" style="display:none"></div>
-</div>
+	<div id="clear_guess_wrap">
+		<div id="clear_guess" class="button disabled">Tyhjennä</div>
+	</div>
 
-<br>
-<div id="result"></div>
+	<div id="possible_list">
+	<span id="possible_count"></span>
+	<div id="possible_words" style="display:none"></div>
+	</div>
+
+	<div id="result"></div>
+
+</div>
 
 
 
