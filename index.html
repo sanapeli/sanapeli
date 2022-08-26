@@ -14,7 +14,7 @@
 	<meta property="og:description" content="Anagrammeja sanoista">
 
 <script>
-var WORDS = [
+var ALL_WORDS = [
 "aakkonen", "aakkosellinen", "aakkosellisesti", "aakkosellisuus", "aakkosittain", "aakkosjärjestys", "aakkosnumeerinen", "aakkostaa", "aakkosto", "aakkostus", "aalloittain", "aalloittainen", "aalloittaisuus", "aallokas", "aallokko", "aallonharja", "aallonmurtaja", "aallonpituus", "aallonpohja", "aallota", "aallotar", "aallottaa", "aallotus", "aaloe", "aalto", "aaltoallas", "aaltoalue", "aaltoenergia", "aaltoilla", "aaltoilu", "-aaltoinen", "aaltolevy", "aaltoliike", "aaltopahvi", "aaltopelti", "aaltopituus", "aaltosulje", "aaltosulku", "aaltosulkumerkki", "aaltoviiva", "aaltovoimala", "aamen", "aamiainen", "aamiaismajoitus", "aamiaistapaaminen", "aamiaistunti", "aamu", "aamuaskare", "aamuateria", "aamuhartaus", "aamuhämärä", "aamuinen", "aamuisin", "aamujumalanpalvelus", "aamujuna", "aamukahdeksan", "aamukahvi", "aamukampa", "aamukaste", "aamukylmä", "aamulehti", "aamulenkki", "aamullinen", "aamulypsy", "aamulähetys", "aamulämpö", "aamunavaus", "aamunkoite", "aamunkoitto", "aamunraikas", "aamunsarastus", "aamuntorkku", "aamunvirkku", "aamupahoinvointi", "aamupala", "aamupesu", "aamupuoli", "aamupäivisin", "aamupäivä", "aamurusko", "aamuruuhka", "aamusella", "aamutakki", "aamutohveli", "aamutorkku", "aamutossu", "aamutuimaan", "aamutähti", "aamu-uninen", "aamu-unisuus", "aamu-uutiset", "aamuvarhain", "aamuvarhainen", "aamuvartio", "aamuvirkku", "aamuvoimistelu", "aamuvuoro", "aamuyö", "aapa", "aapasuo", "aapinen",
 "aapiskirja", "aapiskukko", "aaprotti", "aari", "aaria", "aarnialue", "aarnihauta", "aarnihonka", "aarnikotka", "aarnio", "aarnio", "aarniohauta", "aarniometsä", "aarnipuu", "aarnituli", "aarnivalkea", "aaroninparta", "aarpora", "aarre", "aarreaitta", "aarrehauta", "aarrekammio", "aarrekätkö", "aarrelöytö", "aarretuli", "aarrevalkea", "aarteenetsijä", "aarteisto", "aasi", "aasialainen", "aasialaisuus", "aasimainen", "aasimaisesti", "aasimaisuus", "aasinpotku", "aasinsilta", "aatami", "aataminaikainen", "aataminomena", "aataminpuku", "aate", "aatehistoria", "aatekilpailu", "aateli", "aatelinen", "aatelisarvo", "aatelisherra", "aateliskalenteri", "aatelisnenä", "aatelissuku", "aatelissääty", "aatelisto", "aatelisuus", "aatelisvaakuna", "aateliton", "aateloida", "aatelointi", "aateluus", "aatemaailma", "aaterakennelma", "aatesisar", "aatesuunta", "aatetoveri", "aateveli", "aatevirtaus", "aatonaatto", "aatos", "aatra", "aatteellinen", "aatteellisesti", "aatteellisuus", "-aatteinen", "aatto", "aattoilta", "aava", "aavameri", "aave", "aavejuna", "aavekipu", "aavelaiva", "aavemainen", "aavemaisesti", "aavemaisuus", "aavikko", "aavikoitua", "aavistaa", "aavistamaton", "aavistella", "aavistuksenomainen", "aavistus", "aavistuslähtö", "abatsi", "abbedissa", "abessiivi", "abi", "abiturientti", "ablatiivi", "abnormi", "abnormius", "abo", "aboriginaali",
 "abortoida", "abortointi", "abortti", "aborttipilleri", "aborttitabletti", "abrakadabra", "absessi", "absintti", "abskissa", "absolutismi", "absolutisti", "absoluutti", "absoluuttinen", "absoluuttisesti", "absoluuttisuus", "absorboida", "absorbointi", "absorboitua", "absorptio", "abstinenssi", "abstinenssioire", "abstrahoida", "abstrahointi", "abstrahoitua", "abstrakti", "abstraktinen", "abstraktio", "abstraktisesti", "abstraktistaa", "abstraktisti", "abstraktistua", "abstraktisuus", "abstraktius", "absurdi", "absurdisti", "absurdius", "acajoupähkinä", "adagio", "adaptaatio", "adapteri", "adaptoida", "adaptointi", "adaptoitua", "addikti", "addiktio", "adekvaatisti", "adekvaatti", "adekvaattius", "adenokarsinooma", "adenooma", "adenovirus", "adessiivi", "adheesio", "adjektiivi", "adjektiivinen", "adjektiivisesti", "adjektiivisuus", "adjutantti", "adjuvanttihoito", "adonis", "adoptio", "adoptiolapsi", "adoptoida", "adoptointi", "adrenaliini", "adressi", "adsorboida", "adsorbointi", "adsorboitua", "adsorptio", "adsukipapu", "adventismi", "adventisti", "adventti", "adventtiaika", "adventtikalenteri", "adventtikirkko", "adventtiseurakunta", "adventtisunnuntai", "adverbi", "adverbiaali", "adverbiaalinen", "adverbiaalisesti", "adverbiaalisuus", "adverbinen", "adverbisesti", "adverbisuus", "adversatiivinen", "adversatiivisesti", "adversatiivisuus", "aerobic", "aerobikata", "aerobikkaaja", "aerobikkaus", "aerobikki", "aerobinen", "aerobiologia", "aerobiologinen", "aerodynaaminen", "aerodynaamisesti", "aerodynamiikka",
@@ -2120,9 +2120,11 @@ body {
 }
 #word_from {
 	margin-bottom:10px;
+	min-height:100px;
 }
 #current_guess {
 	margin-bottom:10px;
+	min-height:100px;
 }
 #clear_guess {
 	
@@ -2132,10 +2134,25 @@ body {
 #scores {
 	
 }
+
+.blink_me .letter {
+	animation: blinker 0.1s linear infinite;
+	animation-iteration-count: 7;
+}
+
+@keyframes blinker {  
+	50% {
+		opacity: 0;
+		color:#0000FF;
+		background-color:#0000FF;
+		border-color:#0000FF;
+	}
+}
+
 </style>
 
 <div id="game" class="noselect">
-	<div id="new_word" class="button">Uusi&nbsp;sana</div><div id="scores">Pisteet: 0</div>
+	<div id="new_word" class="button">Uusi&nbsp;sana</div><div id="scores"></div>
 	<br>
 	<div id="word_from" class="letterbox"></div>
 	<br>
@@ -2157,7 +2174,12 @@ Mahdolliset sanat <span id="possible_count"></span>:<br>
 
 <script>
 
+var WORDS = [];
 var CURWORD = "";
+var GUESSED = {}; // GUESSED[CURWORD] = [words made of letters used in CURWORD];
+
+var MIN_LEN = 4;
+var MAX_LEN = 10;
 
 var GUESS = [];
 var POSSIBLE = [];
@@ -2171,14 +2193,16 @@ var CACHED_SOUND_EFFECTS = {};
 
 
 var SOUNDS = {
+	already: [1,1,0,0.115,0.431,0.526,0.311,0,0,-0.266,0,0,0.542421,0.624539,0,0,0,0,0,1,0,0,0,0,0.184],
+	fail: [1,1,0,0.081582,0.588936,0.495,0.623,0,0,-0.352,0,0,0.542421,0.624539,0,0,0,0,0,1,0,0,0,0,0.1068],
 	really: [1,0,0,0.382534,0,0.663,0.318,0,0.115469,-0.138,0,0,0,0,0.31911,0,0,0,0,0.642664,0,0,0,0,0.1068],
 	kill: [1,0,0,0.089127,0,0.441,0.494,0,-0.333792,0,0,0,0,0,0.080034,0,0,0,0,1,0,0,0.013473,0,0.1068],
 	next: [1,0,0,0.362553,0,0.454,0.501627,0,0.205054,0,0,0,0,0,0.578561,0,0,0,0,0.902463,0,0,0.157574,0,0.1068],
 	clear: [1,3,0,0.233,0.316,0.438,0.301,0,-0.294087,0,0,0,0.319083,0.897748,0,0,0.670729,0,0,1,0,0,0,0,0.1068],
 	score: [1,0,0,0.353496,0,0.472,0.404228,0,0.391888,0,0,0,0,0,0.174445,0,0.527907,0,0,1,0,0,0,0,0.1068],
 	click: [1,1,0,0.081582,0.588936,0.495,0.623,0,0,0,0,0,0.542421,0.624539,0,0,0,0,0,1,0,0,0,0,0.1068],
-	explosion_big:  [1,3,0,0.354736,0.590014,0.775,0.074,0,0,0,0,0,0.295512,0.676919,0,0,0,0.176156,-0.054911,1,0,0,0,0,0.1068],
-	explosion_medium:   [1,3,0,0.287594,0.51717,0.855,0.117312,0,0,0,0.652,0.66,0,0,0,0,0,-0.146964,-0.004699,    1,0,0,0,0,0.25],
+	explosion_big: [1,3,0,0.354736,0.590014,0.775,0.074,0,0,0,0,0,0.295512,0.676919,0,0,0,0.176156,-0.054911,1,0,0,0,0,0.1068],
+	explosion_medium: [1,3,0,0.287594,0.51717,0.855,0.117312,0,0,0,0.652,0.66,0,0,0,0,0,-0.146964,-0.004699,    1,0,0,0,0,0.25],
 }
 
 
@@ -2293,14 +2317,10 @@ function substr_count(string, subString, allowOverlapping){
 }
 
 function sort_by_length_desc(a, b){
-	// ASC  -> a.length - b.length
-	// DESC -> b.length - a.length
 	return b.length - a.length;
 }
 
 function totals_sort(a, b){
-	// ASC  -> a.length - b.length
-	// DESC -> b.length - a.length
 	return b[0] - a[0];
 }
 
@@ -2346,25 +2366,8 @@ function get_possible_words(rand_word, minlen){
 	return foundwords;
 }
 
-/*
-function get_totals(){
-	let totals = [];
-	
-	for(let i = 0; i < WORDS.length; i++){
-		let word = WORDS[i];
-		let foundwords = get_possible_words(word);
-		totals.push([foundwords.length, word]);
-	}
-	
-	totals.sort(totals_sort);
-	
-	let out = "";
-	for(let i = 0; i < totals.length; i++){
-		out += totals[i][1]+" = "+totals[i][0]+"<br>";
-	}
-	$('#possible_words').html(out);
-}
-*/
+
+
 
 String.prototype.shuffle = function(){
     var a = this.split(""),
@@ -2399,12 +2402,16 @@ function render_guess(){
 		let letter = GUESS[i];
 		$("#current_guess").append($("<span class='letter guess' data-index='"+i+"'></span>").text(letter));
 	}
-		
+
 	update_ui();
 }
 
 
 $(document).on("click", ".letter", function(e){
+	if(typeof GUESSED[CURWORD] === "undefined"){
+		GUESSED[CURWORD] = [];
+	}
+	
 	let clicked_letter = $(this).text();
 	//$(this).addClass("used");
 	console.log(clicked_letter);
@@ -2416,7 +2423,13 @@ $(document).on("click", ".letter", function(e){
 		let index = $(this).data("index");
 		GUESS.splice(index, 1);
 	}else{
-		GUESS.push(clicked_letter);
+		let c1 = substr_count(CURWORD, clicked_letter);
+		let c2 = substr_count(GUESS.join(""), clicked_letter);
+		if(c2 < c1){
+			GUESS.push(clicked_letter);
+		}else{
+			sound = "fail";
+		}
 	}
 	
 	////////////////////////////////////////////////////////////////
@@ -2425,16 +2438,25 @@ $(document).on("click", ".letter", function(e){
 	let GUESS_STR = GUESS.join("");
 
 
+	$("#current_guess").removeClass("blink_me");
+
 	
 	if(GUESS_STR == CURWORD){
 		sound = "really";
 	}else{	
 		// check guess:
 		let correct_guess = POSSIBLE.includes(GUESS_STR);
+		let already_guessed = GUESSED[CURWORD].includes(GUESS_STR);
 
 		if(correct_guess){
-			sound = "score";
-			player_score++;
+			if(already_guessed){
+				sound = "already";
+			}else{
+				sound = "score";
+				$("#current_guess").addClass("blink_me");
+				GUESSED[CURWORD].push(GUESS_STR);
+				player_score++;
+			}
 		}
 	}
 
@@ -2442,6 +2464,8 @@ $(document).on("click", ".letter", function(e){
 	
 	render_guess();
 });
+
+
 
 
 function update_ui(){
@@ -2458,7 +2482,11 @@ function update_ui(){
 	}else{
 		$(".really").addClass("invisible");
 	}
+	
+	$("#scores").html("Pisteet: "+player_score);
 }
+
+
 
 
 $(document).on("click", "#clear_guess", function(e){
@@ -2481,10 +2509,20 @@ $(document).on("click", "#new_word", function(e){
 
 
 function new_random_word(){
-	CURWORD = WORDS[ran(WORDS.length)];
+	POSSIBLE = [];
+	do {
+		CURWORD = WORDS[ran(WORDS.length)];
+		// skip space and dash:
+		let found = false;
+		if(substr_count(CURWORD, "-") > 0) found = true;
+		if(substr_count(CURWORD, " ") > 0) found = true;
+		if(!found){
+			POSSIBLE = get_possible_words(CURWORD, MIN_LEN);
+		}
+	}while(POSSIBLE.length < 6);
+	
 	set_word_buttons();
-
-	POSSIBLE = get_possible_words(CURWORD, 4);
+	
 	POSSIBLE.sort(sort_by_length_desc);
 	POSSIBLE.shift();
 	
@@ -2497,6 +2535,13 @@ function new_random_word(){
 
 $(document).ready(function(){
 	console.log("ready");
+	
+	WORDS = [];
+	for(let i = 0; i < ALL_WORDS.length; i++){
+		if(ALL_WORDS[i].length >= MIN_LEN && ALL_WORDS[i].length <= MAX_LEN){
+			WORDS.push(ALL_WORDS[i]);
+		}
+	}
 	
 	generate_sounds();
 	
