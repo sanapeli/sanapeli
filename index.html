@@ -2073,7 +2073,7 @@ html, body, #loading_container {
 	border-top:1px solid #9b9b3d;
 	border-bottom:1px solid #9b9b3d;
 	border-radius: 6px;
-	margin:1px;
+	margin:2px;
 	padding:2px 5px 2px 5px;
 	text-transform:uppercase;
 	text-align:center;
@@ -2100,7 +2100,7 @@ html, body, #loading_container {
 }
 #game {
 	text-align:right;
-	padding:180px 0px 0px 5px;
+	padding:140px 0px 0px 5px;
 	
 
 	background: rgb(27,48,110);
@@ -2155,8 +2155,12 @@ html, body, #loading_container {
 	margin-bottom:40px;
 }
 #word_from {
-	margin-bottom:10px;
+	margin-bottom:40px;
+    width: 170px;
+	min-width:170px;
+    text-align: center;
 	min-height:100px;
+	display:inline-block;
 }
 #current_guess {
 	margin-bottom:10px;
@@ -2247,11 +2251,13 @@ html, body, #loading_container {
 	<div id="scores"></div>
 	</div>
 	<div id="new_word" class="button">Uusi&nbsp;sana</div>
+	<div id="curscore"></div><span class="really invisible"></span>
+	<div id="current_guess" class="letterbox"></div>
 	<div id="word_from" class="letterbox"></div>
-	<div id="current_guess" class="letterbox"></div><div id="curscore"></div><span class="really invisible"></span>
+	
 	<br>
 	<div id="clear_guess_wrap">
-		<div id="clear_guess" class="button disabled">Tyhjennä</div>
+		<div id="randomize" class="button">Randomoi</div><div id="clear_guess" class="button disabled">Tyhjennä</div>
 	</div>
 
 	<div id="possible_list">
@@ -2274,8 +2280,8 @@ var WORDS = [];
 var CURWORD = "";
 var GUESSED = {}; // GUESSED[CURWORD] = [words made of letters used in CURWORD];
 
-var MIN_LEN = 4;
-var MAX_LEN = 7;
+var MIN_LEN = 5;
+var MAX_LEN = 9;
 
 var GUESS = [];
 var POSSIBLE = [];
@@ -2297,8 +2303,7 @@ var SOUNDS = {
 	clear: [1,3,0,0.233,0.316,0.438,0.301,0,-0.294087,0,0,0,0.319083,0.897748,0,0,0.670729,0,0,1,0,0,0,0,0.1068],
 	score: [1,0,0,0.353496,0,0.472,0.404228,0,0.391888,0,0,0,0,0,0.174445,0,0.527907,0,0,1,0,0,0,0,0.1068],
 	click: [1,1,0,0.081582,0.588936,0.495,0.623,0,0,0,0,0,0.542421,0.624539,0,0,0,0,0,1,0,0,0,0,0.1068],
-	explosion_big: [1,3,0,0.354736,0.590014,0.775,0.074,0,0,0,0,0,0.295512,0.676919,0,0,0,0.176156,-0.054911,1,0,0,0,0,0.1068],
-	explosion_medium: [1,3,0,0.287594,0.51717,0.855,0.117312,0,0,0,0.652,0.66,0,0,0,0,0,-0.146964,-0.004699,    1,0,0,0,0,0.25],
+	shuffle: [1,1,0,0.19396,0,0.463777,0.225533,0,0.307713,0,0,0,0,0,1,0,0.578735,0,0,1,0,0,0,0,0.134],
 }
 
 
@@ -2323,6 +2328,19 @@ var SAMPLE_SIZE = 8;
 /////////////////////////////////
 
 
+
+String.prototype.shuffle = function(){
+    var a = this.split(""),
+        n = a.length;
+
+    for(var i = n - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i];
+        a[i] = a[j];
+        a[j] = tmp;
+    }
+    return a.join("");
+}
 
 
 
@@ -2465,19 +2483,6 @@ function get_possible_words(rand_word, minlen){
 
 
 
-String.prototype.shuffle = function(){
-    var a = this.split(""),
-        n = a.length;
-
-    for(var i = n - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var tmp = a[i];
-        a[i] = a[j];
-        a[j] = tmp;
-    }
-    return a.join("");
-}
-
 
 function set_word_buttons(){
 
@@ -2582,9 +2587,25 @@ function update_ui(){
 	}
 	
 	$("#scores").html("Pisteet: "+player_score);
+	
+	set_word_buttons();
+}
+
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
 }
 
 
+$(document).on("click", "#randomize", function(e){
+	CURWORD = CURWORD.shuffle();
+	render_guess();
+	play_sound("shuffle");
+});
 
 
 $(document).on("click", "#clear_guess", function(e){
@@ -2618,8 +2639,6 @@ function new_random_word(){
 			POSSIBLE = get_possible_words(CURWORD, MIN_LEN);
 		}
 	}while(POSSIBLE.length < 6);
-	
-	set_word_buttons();
 	
 	POSSIBLE.sort(sort_by_length_desc);
 	POSSIBLE.shift();
