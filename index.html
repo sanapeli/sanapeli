@@ -2042,7 +2042,7 @@ background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMA
 }
 
 
-body {
+body, html {
 	background-color:black;
 	color:#FFFF88;
 	font:35px verdana;
@@ -2120,7 +2120,6 @@ html, body, #loading_container {
 	text-align:right;
 	padding:30px 0px 0px 5px;
 	
-
 	background: rgb(27,48,110);
 	
 	background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%), linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(101,0,177,1) 25%, rgba(255,0,0,1) 50%, rgba(112,0,0,1) 75%, rgba(0,0,0,1) 100%);
@@ -2230,9 +2229,10 @@ html, body, #loading_container {
 @keyframes hint_blinker1 {  
 	50% {
 		opacity: 0;
-		color:#FFFF00;
-		background-color:#FFFF00;
-		border-color:#FFFF00;
+		color:#0000FF;
+		background-color:rgba(0,0,255,0.6);
+		border-color:#0000FF;
+
 	}
 }
 
@@ -2244,9 +2244,11 @@ html, body, #loading_container {
 @keyframes hint_blinker2 {  
 	50% {
 		opacity: 0;
+
 		color:#FFFF00;
-		background-color:#FFFF00;
+		background-color:rgba(255,255,0,1);
 		border-color:#FFFF00;
+		
 	}
 }
 
@@ -2258,9 +2260,10 @@ html, body, #loading_container {
 @keyframes hint_blinker3 {  
 	50% {
 		opacity: 0;
-		color:#FFFF00;
-		background-color:#FFFF00;
-		border-color:#FFFF00;
+
+		color:#FFFFFF;
+		background-color:rgba(255,255,255,0.6);
+		border-color:#FFFFFF;
 	}
 }
 
