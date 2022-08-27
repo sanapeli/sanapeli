@@ -1,4 +1,5 @@
 {
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
 	"display": "standalone",
 	"background_color": "#000000"
 }
