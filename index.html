@@ -2205,6 +2205,10 @@ html, body, #loading_container {
 	margin-bottom:20px;
 }
 
+#sanakirja {
+	min-height:80px;
+}
+
 .blink_me .letter {
 	animation: blinker 0.1s linear infinite;
 	animation-iteration-count: 7;
@@ -2305,7 +2309,9 @@ html, body, #loading_container {
 	<div id="scores"></div>
 	</div>
 	<div id="give_hint" class="button">Vihje</div><div id="new_word" class="button">Uusi&nbsp;sana</div>
-	<div id="curscore"></div><span class="really invisible"></span>
+	<div id="sanakirja"></div>
+	<div id="curscore"></div>
+	<!--<span class="really invisible"></span>-->
 	<div id="current_guess" class="letterbox"></div>
 	<div id="word_from" class="letterbox"></div>
 	
@@ -2633,6 +2639,8 @@ $(document).on("click", ".letter", function(e){
 					player_score += GUESS_STR.length;
 					$("#curscore").html("+"+GUESS_STR.length);
 					$("#curscore").addClass("scoreblink");
+					
+					$("#sanakirja").html("<a href='https://www.suomisanakirja.fi/amp/"+GUESS_STR+"' target='reference'>"+GUESS_STR+"</a>");
 				}
 			}
 		}
@@ -2781,6 +2789,7 @@ function render_remaining(){
 
 
 function new_random_word(){
+	$("#sanakirja").html("");
 	$("#possible_words").hide();
 	
 	POSSIBLE = [];
