@@ -2118,7 +2118,7 @@ html, body, #loading_container {
 
 #game {
 	text-align:right;
-	padding:80px 0px 0px 5px;
+	padding:30px 0px 0px 5px;
 	
 
 	background: rgb(27,48,110);
@@ -2313,7 +2313,7 @@ html, body, #loading_container {
 
 	<div id="possible_list">
 	<span id="possible_count"></span>
-	<div id="possible_words" style="display:block"></div>
+	<div id="possible_words" style="display:none"></div>
 	</div>
 
 	<div id="result"></div>
@@ -2347,6 +2347,8 @@ var CACHED_SOUND_EFFECTS = {};
 
 
 var SOUNDS = {
+	explosion1: [1,3,0,0.354736,0.590014,0.775,0.074,0,0,0,0,0,0.295512,0.676919,0,0,0,0.176156,-0.054911,1,0,0,0,0,0.1068],
+	explosion2: [1,3,0,0.287594,0.51717,0.855,0.117312,0,0,0,0.652,0.66,0,0,0,0,0,-0.146964,-0.004699,    1,0,0,0,0,0.25],
 	hint: [1,3,0.2034,0.519972,0.079301,0.420554,0.503805,0,0.019718,-0.113554,0.02742,-0.960806,0.437405,-0.928749,0.31182,0.242098,-0.059401,0.008261,-0.0102,0.205988,0.046432,0.574843,0.114387,0.001109,0.1068],
 	already: [1,1,0,0.115,0.431,0.526,0.311,0,0,-0.266,0,0,0.542421,0.624539,0,0,0,0,0,1,0,0,0,0,0.184],
 	fail: [1,1,0,0.081582,0.588936,0.495,0.623,0,0,-0.352,0,0,0.542421,0.624539,0,0,0,0,0,1,0,0,0,0,0.1068],
@@ -2725,6 +2727,30 @@ $(document).on("click", "#new_word", function(e){
 	play_sound("next");
 });
 
+let cheat_clicks = 0;
+let prev_click_time = 0;
+
+
+function getTimeMillis(){
+	var d = new Date();
+	return d.getTime();
+}
+
+
+
+$(document).on("click", "#possible_count", function(e){
+	if(getTimeMillis()-prev_click_time < 400){
+		cheat_clicks++;
+		if(cheat_clicks >= 10){
+			cheat_clicks = 0;
+			play_sound("explosion2");
+			$("#possible_words").show();
+		}
+	}else{
+		cheat_clicks = 0;
+	}
+	prev_click_time = getTimeMillis();
+});
 
 
 function get_remaining_guesses(){
@@ -2745,13 +2771,15 @@ function get_remaining_guesses(){
 
 function render_remaining(){
 	let curpossible = get_remaining_guesses();//POSSIBLE.length;
-	//$('#possible_words').html(POSSIBLE.join(", "));
+	$('#possible_words').html(POSSIBLE.join(", "));
 	$('#possible_count').html("Mahdollisia sanoja: "+curpossible.length+" kpl");
 }
 
 
 
 function new_random_word(){
+	$("#possible_words").hide();
+	
 	POSSIBLE = [];
 	do {
 		CURWORD = WORDS[ran(WORDS.length)];
@@ -2765,9 +2793,11 @@ function new_random_word(){
 		}
 	}while(POSSIBLE.length < 6);
 	
+	//CURWORD = "ydinsota";
+	//POSSIBLE = get_possible_words(CURWORD, MIN_LEN);
+	
 	POSSIBLE.sort(sort_by_length_desc);
 	POSSIBLE.shift();
-	
 	
 	render_guess();
 	set_word_buttons();
