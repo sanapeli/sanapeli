@@ -2569,6 +2569,7 @@ function render_guess(){
 		$("#current_guess").append($("<span class='letter guess' data-index='"+i+"'></span>").text(letter));
 	}
 
+	render_remaining();
 	update_ui();
 }
 
@@ -2690,21 +2691,11 @@ function give_hint(hint){
 
 
 $(document).on("click", "#give_hint", function(e){
-	if(typeof GUESSED[CURWORD_UNSUFFLED] === "undefined"){
-		GUESSED[CURWORD_UNSUFFLED] = [];
-	}
-	let cur_guesses = GUESSED[CURWORD_UNSUFFLED];
-	
-	// filter out already guessed words from possible array:
-	let out = [];
-	for(let p = 0; p < POSSIBLE.length; p++){
-		if(!cur_guesses.includes(POSSIBLE[p])){
-			out.push(POSSIBLE[p]);
-		}
-	}
-	if(out.length > 0){
-		shuffleArray(out);
-		let hint = out[0];
+	let remaining = get_remaining_guesses();
+
+	if(remaining.length > 0){
+		shuffleArray(remaining);
+		let hint = remaining[0];
 		give_hint(hint);
 		play_sound("hint");
 	}
@@ -2736,6 +2727,29 @@ $(document).on("click", "#new_word", function(e){
 
 
 
+function get_remaining_guesses(){
+	if(typeof GUESSED[CURWORD_UNSUFFLED] === "undefined"){
+		GUESSED[CURWORD_UNSUFFLED] = [];
+	}
+	let cur_guesses = GUESSED[CURWORD_UNSUFFLED];
+	
+	// filter out already guessed words from possible array:
+	let out = [];
+	for(let p = 0; p < POSSIBLE.length; p++){
+		if(!cur_guesses.includes(POSSIBLE[p])){
+			out.push(POSSIBLE[p]);
+		}
+	}
+	return out;
+}
+
+function render_remaining(){
+	let curpossible = get_remaining_guesses();//POSSIBLE.length;
+	//$('#possible_words').html(POSSIBLE.join(", "));
+	$('#possible_count').html("Mahdollisia sanoja: "+curpossible.length+" kpl");
+}
+
+
 
 function new_random_word(){
 	POSSIBLE = [];
@@ -2754,8 +2768,6 @@ function new_random_word(){
 	POSSIBLE.sort(sort_by_length_desc);
 	POSSIBLE.shift();
 	
-	$('#possible_words').html(POSSIBLE.join(", "));
-	$('#possible_count').html("Mahdollisia sanoja: "+POSSIBLE.length+" kpl");
 	
 	render_guess();
 	set_word_buttons();
