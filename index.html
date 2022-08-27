@@ -2084,12 +2084,15 @@ html, body, #loading_container {
 	font-size:50px;
 }
 
+
+
 .letter:first-child {
 	border-left:1px solid #9b9b3d;
 }
 .letter:last-child {
 	border-right:1px solid #9b9b3d;
 }
+
 
 .letter.used {
 	background-color:#FF0000;
@@ -2098,6 +2101,21 @@ html, body, #loading_container {
 .letter:hover {
 	background-color:#FF0000;
 }
+
+
+.letter.empty {
+	background-color:rgba(166,100,0, 0.15);
+	border-color:rgba(255,255,128, 0.2);
+	cursor:auto;
+}
+
+.letter.empty:hover {
+	
+}
+
+
+
+
 #game {
 	text-align:right;
 	padding:80px 0px 0px 5px;
@@ -2202,19 +2220,52 @@ html, body, #loading_container {
 	}
 }
 
-.blink_me .letter {
-	animation: blinker 0.1s linear infinite;
+
+
+
+.hint_blink1 {
+	animation: hint_blinker1 0.1s linear infinite;
 	animation-iteration-count: 7;
 }
-
-@keyframes blinker {  
+@keyframes hint_blinker1 {  
 	50% {
 		opacity: 0;
-		color:#0000FF;
-		background-color:#0000FF;
-		border-color:#0000FF;
+		color:#FFFF00;
+		background-color:#FFFF00;
+		border-color:#FFFF00;
 	}
 }
+
+
+.hint_blink2 {
+	animation: hint_blinker2 0.1s linear infinite;
+	animation-iteration-count: 11;
+}
+@keyframes hint_blinker2 {  
+	50% {
+		opacity: 0;
+		color:#FFFF00;
+		background-color:#FFFF00;
+		border-color:#FFFF00;
+	}
+}
+
+
+.hint_blink3 {
+	animation: hint_blinker3 0.1s linear infinite;
+	animation-iteration-count: 15;
+}
+@keyframes hint_blinker3 {  
+	50% {
+		opacity: 0;
+		color:#FFFF00;
+		background-color:#FFFF00;
+		border-color:#FFFF00;
+	}
+}
+
+
+
 
 #curscore {
 	opacity:0;
@@ -2250,7 +2301,7 @@ html, body, #loading_container {
 	<div style="width:100%; text-align:left">
 	<div id="scores"></div>
 	</div>
-	<div id="new_word" class="button">Uusi&nbsp;sana</div>
+	<div id="give_hint" class="button">Vihje</div><div id="new_word" class="button">Uusi&nbsp;sana</div>
 	<div id="curscore"></div><span class="really invisible"></span>
 	<div id="current_guess" class="letterbox"></div>
 	<div id="word_from" class="letterbox"></div>
@@ -2262,7 +2313,7 @@ html, body, #loading_container {
 
 	<div id="possible_list">
 	<span id="possible_count"></span>
-	<div id="possible_words" style="display:none"></div>
+	<div id="possible_words" style="display:block"></div>
 	</div>
 
 	<div id="result"></div>
@@ -2278,6 +2329,7 @@ html, body, #loading_container {
 
 var WORDS = [];
 var CURWORD = "";
+var CURWORD_UNSUFFLED = "";
 var GUESSED = {}; // GUESSED[CURWORD] = [words made of letters used in CURWORD];
 
 var MIN_LEN = 5;
@@ -2295,6 +2347,7 @@ var CACHED_SOUND_EFFECTS = {};
 
 
 var SOUNDS = {
+	hint: [1,3,0.2034,0.519972,0.079301,0.420554,0.503805,0,0.019718,-0.113554,0.02742,-0.960806,0.437405,-0.928749,0.31182,0.242098,-0.059401,0.008261,-0.0102,0.205988,0.046432,0.574843,0.114387,0.001109,0.1068],
 	already: [1,1,0,0.115,0.431,0.526,0.311,0,0,-0.266,0,0,0.542421,0.624539,0,0,0,0,0,1,0,0,0,0,0.184],
 	fail: [1,1,0,0.081582,0.588936,0.495,0.623,0,0,-0.352,0,0,0.542421,0.624539,0,0,0,0,0,1,0,0,0,0,0.1068],
 	really: [1,0,0,0.382534,0,0.663,0.318,0,0.115469,-0.138,0,0,0,0,0.31911,0,0,0,0,0.642664,0,0,0,0,0.1068],
@@ -2487,9 +2540,15 @@ function get_possible_words(rand_word, minlen){
 function set_word_buttons(){
 
 	$("#word_from").empty();
+	let letcounts = {};
 	for(let i = 0; i < CURWORD.length; i++){
 		let letter = CURWORD[i];
-		$("#word_from").append($("<span class='letter'></span>").text(letter));
+		if(typeof letcounts[letter] === "undefined"){
+			letcounts[letter] = 0;
+		}
+		letcounts[letter]++;
+		let nth = letcounts[letter];
+		$("#word_from").append($("<span class='letter letter_"+letter+"_"+nth+"'></span>").text(letter));
 	}
 
 }
@@ -2499,6 +2558,12 @@ function set_word_buttons(){
 
 function render_guess(){
 	$("#current_guess").empty();
+	let empty_letters = MIN_LEN-GUESS.length;
+	if(empty_letters > 0){
+		for(let i = 0; i < empty_letters; i++){
+			$("#current_guess").append($("<span class='letter empty'></span>").html("&nbsp;"));
+		}
+	}
 	for(let i = 0; i < GUESS.length; i++){
 		let letter = GUESS[i];
 		$("#current_guess").append($("<span class='letter guess' data-index='"+i+"'></span>").text(letter));
@@ -2509,63 +2574,67 @@ function render_guess(){
 
 
 $(document).on("click", ".letter", function(e){
-	if(typeof GUESSED[CURWORD] === "undefined"){
-		GUESSED[CURWORD] = [];
-	}
-	
-	let clicked_letter = $(this).text();
-	//$(this).addClass("used");
-	console.log(clicked_letter);
-	
-	let sound = "click";
-	
-	if($(this).hasClass("guess")){
-		sound = "kill";
-		let index = $(this).data("index");
-		GUESS.splice(index, 1);
-	}else{
-		let c1 = substr_count(CURWORD, clicked_letter);
-		let c2 = substr_count(GUESS.join(""), clicked_letter);
-		if(c2 < c1){
-			GUESS.push(clicked_letter);
-		}else{
-			sound = "fail";
+	if(!$(this).hasClass("empty")){
+		if(typeof GUESSED[CURWORD_UNSUFFLED] === "undefined"){
+			GUESSED[CURWORD_UNSUFFLED] = [];
 		}
-	}
-	
-	////////////////////////////////////////////////////////////////
-	// all guess modifications must be done before this line!
-	//
-	let GUESS_STR = GUESS.join("");
-
-
-	$("#current_guess").removeClass("blink_me");
-	$("#curscore").removeClass("scoreblink");
-	
-	if(GUESS_STR == CURWORD){
-		sound = "really";
-	}else{	
-		// check guess:
-		let correct_guess = POSSIBLE.includes(GUESS_STR);
-		let already_guessed = GUESSED[CURWORD].includes(GUESS_STR);
-
-		if(correct_guess){
-			if(already_guessed){
-				sound = "already";
+		
+		let clicked_letter = $(this).text();
+		//$(this).addClass("used");
+		console.log(clicked_letter);
+		
+		let sound = "click";
+		
+		if($(this).hasClass("guess")){
+			sound = "kill";
+			let index = $(this).data("index");
+			GUESS.splice(index, 1);
+		}else{
+			let c1 = substr_count(CURWORD, clicked_letter);
+			let c2 = substr_count(GUESS.join(""), clicked_letter);
+			if(c2 < c1){
+				GUESS.push(clicked_letter);
 			}else{
-				sound = "score";
-				$("#current_guess").addClass("blink_me");
-				GUESSED[CURWORD].push(GUESS_STR);
-				player_score += GUESS_STR.length;
-				$("#curscore").html("+"+GUESS_STR.length);
-				$("#curscore").addClass("scoreblink");
+				sound = "fail";
 			}
 		}
-	}
+		
+		////////////////////////////////////////////////////////////////
+		// all guess modifications must be done before this line!
+		//
+		let GUESS_STR = GUESS.join("");
 
-	play_sound(sound);
-	
-	render_guess();
+
+		$("#current_guess").removeClass("blink_me");
+		$("#curscore").removeClass("scoreblink");
+		
+		if(GUESS_STR == CURWORD_UNSUFFLED){
+			sound = "really";
+			console.log(GUESS_STR+" == "+CURWORD_UNSUFFLED);
+		}else{
+			console.log(GUESS_STR+" != "+CURWORD_UNSUFFLED);
+			// check guess:
+			let correct_guess = POSSIBLE.includes(GUESS_STR);
+			let already_guessed = GUESSED[CURWORD_UNSUFFLED].includes(GUESS_STR);
+
+			if(correct_guess){
+				if(already_guessed){
+					sound = "already";
+				}else{
+					sound = "score";
+					$("#current_guess").addClass("blink_me");
+					GUESSED[CURWORD_UNSUFFLED].push(GUESS_STR);
+					player_score += GUESS_STR.length;
+					$("#curscore").html("+"+GUESS_STR.length);
+					$("#curscore").addClass("scoreblink");
+				}
+			}
+		}
+
+		play_sound(sound);
+		
+		render_guess();
+	}
 });
 
 
@@ -2580,7 +2649,7 @@ function update_ui(){
 		$("#clear_guess").addClass("disabled");
 	}
 	
-	if(GUESS_STR == CURWORD){
+	if(GUESS_STR == CURWORD_UNSUFFLED){
 		$(".really").removeClass("invisible");
 	}else{
 		$(".really").addClass("invisible");
@@ -2588,7 +2657,6 @@ function update_ui(){
 	
 	$("#scores").html("Pisteet: "+player_score);
 	
-	set_word_buttons();
 }
 
 function shuffleArray(array) {
@@ -2601,9 +2669,51 @@ function shuffleArray(array) {
 }
 
 
+function give_hint(hint){
+	console.log("hint = "+hint+" = .letter_"+hint[0]);
+	set_word_buttons();
+	let letcounts = {};
+	letcounts[hint[0]] = 0;
+	letcounts[hint[1]] = 0;
+	letcounts[hint[2]] = 0;
+	
+	letcounts[hint[0]]++;
+	$('.letter_'+hint[0]+"_"+letcounts[hint[0]]).addClass("hint_blink1");
+	
+	letcounts[hint[1]]++;
+	$('.letter_'+hint[1]+"_"+letcounts[hint[1]]).addClass("hint_blink2");
+	
+	letcounts[hint[2]]++;
+	$('.letter_'+hint[2]+"_"+letcounts[hint[2]]).addClass("hint_blink3");
+}
+
+
+
+$(document).on("click", "#give_hint", function(e){
+	if(typeof GUESSED[CURWORD_UNSUFFLED] === "undefined"){
+		GUESSED[CURWORD_UNSUFFLED] = [];
+	}
+	let cur_guesses = GUESSED[CURWORD_UNSUFFLED];
+	
+	// filter out already guessed words from possible array:
+	let out = [];
+	for(let p = 0; p < POSSIBLE.length; p++){
+		if(!cur_guesses.includes(POSSIBLE[p])){
+			out.push(POSSIBLE[p]);
+		}
+	}
+	if(out.length > 0){
+		shuffleArray(out);
+		let hint = out[0];
+		give_hint(hint);
+		play_sound("hint");
+	}
+});
+
+
 $(document).on("click", "#randomize", function(e){
 	CURWORD = CURWORD.shuffle();
-	render_guess();
+	set_word_buttons();
 	play_sound("shuffle");
 });
 
@@ -2631,6 +2741,7 @@ function new_random_word(){
 	POSSIBLE = [];
 	do {
 		CURWORD = WORDS[ran(WORDS.length)];
+		CURWORD_UNSUFFLED = CURWORD;
 		// skip space and dash:
 		let found = false;
 		if(substr_count(CURWORD, "-") > 0) found = true;
@@ -2643,10 +2754,11 @@ function new_random_word(){
 	POSSIBLE.sort(sort_by_length_desc);
 	POSSIBLE.shift();
 	
-	//$('#possible_words').html(POSSIBLE.join(", "));
+	$('#possible_words').html(POSSIBLE.join(", "));
 	$('#possible_count').html("Mahdollisia sanoja: "+POSSIBLE.length+" kpl");
 	
 	render_guess();
+	set_word_buttons();
 }
 
 
