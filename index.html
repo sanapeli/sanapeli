@@ -814,12 +814,17 @@ function draw_star(x, y, diameter, angle){
 
 
 
-function draw_random_star(extraletters){
+function draw_random_star(i){
 	let x = Math.random()*window.innerWidth;
 	let y = Math.random()*window.innerHeight;
 	let angle = Math.random()*90.0;
-	let size = Math.pow(extraletters, 3)*0.5+20;
-	draw_star(x, y, size, angle);
+	//let size = Math.pow(extraletters, 3)*0.75+40;
+	let lens = [40, 80, 140, 200, 250, 340];
+	
+	if(i < 0) i = 0;
+	if(i > lens.length-1) i = lens-length-1;
+	//console.log(i);
+	draw_star(x, y, lens[i], angle);
 }
 
 
