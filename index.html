@@ -386,9 +386,10 @@ $(document).on("click", ".letter", function(e){
 					sound = "score";
 					$("#current_guess").addClass("blink_me");
 					GUESSED[CURWORD_UNSUFFLED].push(GUESS_STR);
-					let score_add = Math.pow(GUESS_STR.length-(MIN_LEN-1), 3);
+					let extraletters = GUESS_STR.length-(MIN_LEN-1);
+					let score_add = Math.pow(extraletters, 3);
 					player_score += score_add;
-					draw_random_star();
+					draw_random_star(extraletters);
 					
 					$("#curscore").html("+"+score_add);
 					$("#curscore").addClass("scoreblink");
@@ -618,6 +619,62 @@ function get_kxy_angle(angle){
 	this.y = Math.cos((angle-90.0)*(Math.PI/180.0));
 }
 
+function ranadd(range){
+	return ((Math.random()-0.5)*2)*range;
+}
+
+function clamp(color){
+	if(color < 0) color = 0;
+	if(color > 255) color = 255;
+	return color;
+}
+
+
+
+function decodeRGBA(argb){
+	this.a = (argb >> 24) & 255;
+	this.r = (argb >> 16) & 255;
+	this.g = (argb >> 8) & 255;
+	this.b = argb & 255;
+}
+
+function encodeRGBA(a,r,g,b){
+	return ((a << 24) | (r << 16) | (g << 8) | b) >>> 0; // ">>> 0" converts to 32bit unsigned integer
+}
+
+function valueBetween(from, to, percent){
+	return (to-from)*percent+from;
+}
+
+function intBetween(from, to, percent){
+	return Math.round(valueBetween(from, to, percent));
+}
+
+// gives gradient color value at specific point of the gradient line.
+function colorBetweenRGBA(from, to, percent){
+	let c1 = new decodeRGBA(from);
+	let c2 = new decodeRGBA(to);
+	return encodeRGBA(
+		intBetween(c1.a, c2.a, percent),
+		intBetween(c1.r, c2.r, percent),
+		intBetween(c1.g, c2.g, percent),
+		intBetween(c1.b, c2.b, percent)
+	);
+}
+
+function colorBetweenRGBA_array(arr, percent){
+	let len = arr.length;
+	let total_gradients = len-1; // 2 colors have 1 gradient, 3 have 2. etc.
+	let step = 1.0/total_gradients;
+	let c1 = Math.floor(percent/step);
+	let c2 = c1+1;
+	if(c2 > len-1){
+		c2 = len-1;
+	}
+	let percent_between = (percent/step)-c1;
+	return colorBetweenRGBA(arr[c1], arr[c2], percent_between);
+}
+
 
 
 function draw_star(x, y, diameter, angle){
@@ -627,11 +684,26 @@ function draw_star(x, y, diameter, angle){
 
 	x+=0.5;
 	y+=0.5;
+	
+
+	
+	let arr1 = [0xFF0000, 0xFFFF00, 0x00FFFF, 0x0000FF, 0xFF00FF, 0xFF0000];
+	let arr2 = [0xFF8888, 0xFFFF88, 0x88FFFF, 0x8888FF, 0xFF88FF, 0xFF8888];
+	let cindex1 = Math.random();
+	let cindex2 = cindex1+0.1;
+	if(cindex2 > 1){
+		cindex2 = cindex2-1;
+	}
+	let c1 = new decodeRGBA(colorBetweenRGBA_array(arr1, cindex1));
+	let c2 = new decodeRGBA(colorBetweenRGBA_array(arr2, cindex2));
+	
+	let rgb1 = c1.r+","+c1.g+","+c1.b;
+	let rgb2 = c2.r+","+c2.g+","+c2.b;
 
 	{
 		var grad = ctx.createRadialGradient(x, y, 0, x, y, linelen);
-		grad.addColorStop(0, "rgba(128,128,255,1)");
-		grad.addColorStop(1, "rgba(128,128,255,0)");
+		grad.addColorStop(0, "rgba("+rgb1+",1)");
+		grad.addColorStop(1, "rgba("+rgb1+",0)");
 		
 		
 		var grad2 = ctx.createRadialGradient(x, y, 0, x, y, linelen);
@@ -639,8 +711,8 @@ function draw_star(x, y, diameter, angle){
 		grad2.addColorStop(1, "rgba(255,255,255,0)");
 		
 		var grad3 = ctx.createRadialGradient(x, y, 0, x, y, linelen);
-		grad3.addColorStop(0, "rgba(0,0,255,0.4)");
-		grad3.addColorStop(1, "rgba(0,0,255,0)");
+		grad3.addColorStop(0, "rgba("+rgb2+",0.4)");
+		grad3.addColorStop(1, "rgba("+rgb2+",0)");
 		
 		
 		
@@ -658,7 +730,7 @@ function draw_star(x, y, diameter, angle){
 				let d2 = new get_kxy_angle(tangle-90);
 				let d3 = new get_kxy_angle(tangle+90);
 				
-				let dist = 8;
+				let dist = diameter/10;
 				
 				ctx.moveTo(x+d2.x*dist, y+d2.y*dist);
 				ctx.lineTo(x+dire.x*linelen, y+dire.y*linelen);
@@ -685,7 +757,7 @@ function draw_star(x, y, diameter, angle){
 				let d2 = new get_kxy_angle(tangle-90);
 				let d3 = new get_kxy_angle(tangle+90);
 				
-				let dist = 2;
+				let dist = diameter/30;
 				
 				ctx.moveTo(x+d2.x*dist, y+d2.y*dist);
 				ctx.lineTo(x+dire.x*linelen, y+dire.y*linelen);
@@ -722,7 +794,7 @@ function draw_star(x, y, diameter, angle){
 	{
 		var grad = ctx.createRadialGradient(x, y, 0, x, y, hlen);
 		grad.addColorStop(0, "rgba(255,255,255,1)");
-		grad.addColorStop(1, "rgba(128,128,255,0)");
+		grad.addColorStop(1, "rgba("+rgb1+",0)");
 		ctx.strokeStyle = grad;
 		
 		ctx.beginPath();
@@ -739,13 +811,29 @@ function draw_star(x, y, diameter, angle){
 }
 
 
-function draw_random_star(){
+
+
+
+function draw_random_star(i){
 	let x = Math.random()*window.innerWidth;
 	let y = Math.random()*window.innerHeight;
 	let angle = Math.random()*90.0;
-	let size = 10+Math.random()*80;
-	draw_star(x, y, size, angle);
+	//let size = Math.pow(extraletters, 3)*0.75+40;
+	let lens = [40, 80, 140, 200, 250, 340];
+	
+	if(i < 0) i = 0;
+	if(i > lens.length-1) i = lens-length-1;
+	//console.log(i);
+	draw_star(x, y, lens[i], angle);
 }
+
+
+
+
+$("#game").click(function(){
+	//draw_random_star(Math.floor(Math.random()*6+1));
+});
+
 
 
 $(document).ready(function(){
