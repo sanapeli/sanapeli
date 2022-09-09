@@ -99,6 +99,10 @@ var GUESSED = {}; // GUESSED[CURWORD] = [words made of letters used in CURWORD];
 
 var MIN_LEN = 5;
 var MAX_LEN = 9;
+let MINPOSSIBLE = 20;
+	
+
+	
 
 var GUESS = [];
 var POSSIBLE = [];
@@ -544,14 +548,28 @@ $(document).on("click", "#mywords", function(e){
 
 
 
-
-$(document).on("click", "#changestyle", function(e){
-	PLAY_STYLE ^= 1;
+function update_play_style(){
+	if(PLAY_STYLE == 0){
+		MINPOSSIBLE = 20;
+		MIN_LEN = 5;
+		MAX_LEN = 9;
+	}else if(PLAY_STYLE == 1){
+		MINPOSSIBLE = 10;
+		MIN_LEN = 4;
+		MAX_LEN = 9;
+	}
 	if(PLAY_STYLE == 0){
 		$("#changestyle").html("Norm");
 	}else if(PLAY_STYLE == 1){
 		$("#changestyle").html("Scra");
 	}
+}
+
+
+$(document).on("click", "#changestyle", function(e){
+	PLAY_STYLE ^= 1;
+	update_play_style();
+
 	play_sound("changestyle");
 });
 
@@ -707,6 +725,7 @@ function new_random_word(){
 	$("#sanakirja").html("");
 	$("#possible_words").hide();
 	
+
 	POSSIBLE = [];
 	do {
 		if(PLAY_STYLE == 0){
@@ -722,7 +741,7 @@ function new_random_word(){
 		if(!found){
 			POSSIBLE = get_possible_words(CURWORD, MIN_LEN);
 		}
-	}while(POSSIBLE.length < 20);
+	}while(POSSIBLE.length < MINPOSSIBLE);
 	
 	//CURWORD = "ydinsota";
 	//POSSIBLE = get_possible_words(CURWORD, MIN_LEN);
@@ -1105,6 +1124,8 @@ $(document).ready(function(){
 	build_scrabble_letterlist();
 	
 	random_scrabble_letters();
+	
+	update_play_style();
 	
 	generate_sounds();
 	
