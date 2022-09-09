@@ -25,7 +25,7 @@
 	
 	<script type="text/javascript" src="words_all.js"></script>
 	
-	<link type="text/css" href="style.css?v=18" rel="Stylesheet" />
+	<link type="text/css" href="style.css?v=19" rel="Stylesheet" />
 </head>
 
 
@@ -73,7 +73,7 @@ html, body {
 	
 	<br>
 	<div id="clear_guess_wrap">
-		<div id="randomize" class="button left">Sekoita</div><div id="clear_guess" class="button middle disabled">Tyhjennä</div>
+		<div id="changestyle" class="button left">Scra</div><div id="randomize" class="button middle">Sekoita</div><div id="clear_guess" class="button middle disabled">Tyhjää</div>
 	</div>
 
 	<div id="possible_list">
@@ -106,12 +106,13 @@ var POSSIBLE = [];
 var player_score = 0;
 var wordlist_visible = true;
 
-
+var PLAY_STYLE = 1; // 0 = normal, 1 = scrabble letters randomized.
 
 var CACHED_SOUND_EFFECTS = {};
 
 
 var SOUNDS = {
+	changestyle: [1,0,0,0.066307,0,0.489649,0.468196,0,0.396335,0,0,0,0,0,0.555478,0,0.623612,0,0,1,0,0,0,0,0.11],
 	showhide: [1,3,0.219375,0.070448,0.264728,0.246,0.940782,0,-0.359019,0,0.276075,0.558813,0,0,0,0,0,0,0,1,0,0,0.909348,0,0.252],
 	complete: [1,0,0,0.414,0.092,0.851,0.269,0,0.391888,0,0,0.787,0.027,0.033,0.082,-0.489,0.463,0.002,0.001,1,0,0,0,0,0.204],
 	explosion: [1,3,0,0.287594,0.51717,0.855,0.117312,0,0,0,0.652,0.66,0,0,0,0,0,-0.146964,-0.004699,    1,0,0,0,0,0.25],
@@ -393,17 +394,35 @@ $(document).on("click", ".letter", function(e){
 					sound = "score";
 					$("#current_guess").addClass("blink_me");
 					GUESSED[CURWORD_UNSUFFLED].push(GUESS_STR);
+					
 					let extraletters = GUESS_STR.length-MIN_LEN; // guess = 5, min = 5, extra = 0
-					// diffs:           2   4  6  8  10     12  14  16  18  20
-					//let scorelist = [1, 3, 7, 13, 21, 31, 43, 57, 73, 91, 111];
-					let scorelist   = [10, 31, 62, 113, 244, 310, 430, 570, 730, 910, 1110];
-					let score_add = scorelist[extraletters];
-					player_score += score_add;
-					draw_random_star(extraletters);
+					let score_add = 0;
+					
+					if(PLAY_STYLE == 0){
+						
+						// diffs:           2   4  6  8  10     12  14  16  18  20
+						//let scorelist = [1, 3, 7, 13, 21, 31, 43, 57, 73, 91, 111];
+						let scorelist   = [10, 31, 62, 113, 244, 310, 430, 570, 730, 910, 1110];
+						score_add = scorelist[extraletters];
+						draw_random_star(extraletters);
+					}else if(PLAY_STYLE == 1){
+						console.log(GUESS_STR+":");
+						for(let i = 0; i < GUESS_STR.length; i++){
+							let letter = GUESS_STR[i];
+							if(scrabble_letters.hasOwnProperty(letter)){
+								score_add += scrabble_letters[letter].score;
+								//console.log(letter+" = "+scrabble_letters[letter].score);
+							}
+						}
+						draw_random_star(extraletters);
+					}
+					
+					
 					if($("#scores").hasClass("invisible")){
 						$("#scores").removeClass("invisible");
 					}
 					
+					player_score += score_add;
 					push_mywordlist(score_add);
 					
 					
@@ -524,6 +543,18 @@ $(document).on("click", "#mywords", function(e){
 });
 
 
+
+
+$(document).on("click", "#changestyle", function(e){
+	PLAY_STYLE ^= 1;
+	if(PLAY_STYLE == 0){
+		$("#changestyle").html("Norm");
+	}else if(PLAY_STYLE == 1){
+		$("#changestyle").html("Scra");
+	}
+	play_sound("changestyle");
+});
+
 $(document).on("click", "#randomize", function(e){
 	CURWORD = CURWORD.shuffle();
 	set_word_buttons();
@@ -592,12 +623,84 @@ function get_remaining_guesses(){
 }
 
 function render_remaining(){
-	let curpossible = get_remaining_guesses();//POSSIBLE.length;
+	let curpossible = get_remaining_guesses();
 	let foundnow = GUESSED[CURWORD_UNSUFFLED].length;
 	$('#possible_words').html(curpossible.join(", "));
 	$('#possible_count').html("Löydetty: "+foundnow+" kpl, Mahdollisia: "+curpossible.length+" kpl");
 }
 
+/*
+1 pist. A*10, I*10, N*9, S*7, T*9, E*8
+2 pist. K*5, L*5, O*5, Ä*5
+3 pist. U*4, M*3
+4 pist. H*2, J*2, P*2, R*2, U*2, Y*2
+7 pist. D*1, Ö*1
+8 pist. B*1, F*1, G*1
+10 pist. C*1
+0 pist. 2 laattaa
+*/
+
+let scrabble_letters = {
+	'a': {'count': 10, 'score': 1},
+	'i': {'count': 10, 'score': 1},
+	'n': {'count': 9, 'score': 1},
+	's': {'count': 7, 'score': 1},
+	't': {'count': 9, 'score': 1},
+	'e': {'count': 8, 'score': 1},
+	
+	'k': {'count': 5, 'score': 2},
+	'l': {'count': 5, 'score': 2},
+	'o': {'count': 5, 'score': 2},
+	'ä': {'count': 5, 'score': 2},
+
+	'u': {'count': 4, 'score': 3},
+	'm': {'count': 3, 'score': 3},
+	
+	'h': {'count': 2, 'score': 4},
+	'j': {'count': 2, 'score': 4},
+	'p': {'count': 2, 'score': 4},
+	'r': {'count': 2, 'score': 4},
+	'u': {'count': 2, 'score': 4},
+	'y': {'count': 2, 'score': 4},
+	
+	'd': {'count': 1, 'score': 7},
+	'ö': {'count': 1, 'score': 7},
+	
+	'b': {'count': 1, 'score': 8},
+	'f': {'count': 1, 'score': 8},
+	'g': {'count': 1, 'score': 8},
+	
+	'c': {'count': 1, 'score': 10},
+	
+	//' ': {'count': 2, 'score': 0},
+};
+var all_scrabble_letters_arr = [];
+
+
+function build_scrabble_letterlist(){
+	all_scrabble_letters_arr = [];
+	for(let letter in scrabble_letters){
+		let data = scrabble_letters[letter];
+		for(let i = 0; i < data.count; i++){
+			all_scrabble_letters_arr.push(letter);
+		}
+	}
+}
+
+
+function random_scrabble_letters(length){
+	if(length > all_scrabble_letters_arr.length){
+		length = all_scrabble_letters_arr.length;
+	}
+	shuffleArray(all_scrabble_letters_arr);
+	
+	let out = "";
+	for(let i = 0; i < length; i++){
+		out += all_scrabble_letters_arr[i];
+	}
+	
+	return out;
+}
 
 
 function new_random_word(){
@@ -606,7 +709,11 @@ function new_random_word(){
 	
 	POSSIBLE = [];
 	do {
-		CURWORD = WORDS[ran(WORDS.length)];
+		if(PLAY_STYLE == 0){
+			CURWORD = WORDS[ran(WORDS.length)];
+		}else if(PLAY_STYLE == 1){
+			CURWORD = random_scrabble_letters(9);
+		}
 		CURWORD_UNSUFFLED = CURWORD;
 		// skip space and dash:
 		let found = false;
@@ -995,7 +1102,9 @@ $(document).ready(function(){
 		}
 	}
 
-
+	build_scrabble_letterlist();
+	
+	random_scrabble_letters();
 	
 	generate_sounds();
 	
