@@ -25,7 +25,7 @@
 	
 	<script type="text/javascript" src="words_all.js"></script>
 	
-	<link type="text/css" href="style.css?v=9" rel="Stylesheet" />
+	<link type="text/css" href="style.css?v=10" rel="Stylesheet" />
 </head>
 
 
@@ -404,6 +404,10 @@ $(document).on("click", ".letter", function(e){
 					}
 					
 					push_mywordlist(score_add);
+					//for(let i = 1; i < 100; i++){
+					//	push_mywordlist(i);
+					//}
+					
 					
 					$("#curscore").html("+"+score_add);
 					$("#curscore").addClass("scoreblink");
