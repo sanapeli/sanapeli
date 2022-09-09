@@ -102,7 +102,7 @@ var GUESS = [];
 var POSSIBLE = [];
 
 var player_score = 0;
-var wordlist_visible = 0;
+var wordlist_visible = true;
 
 
 
@@ -391,10 +391,14 @@ $(document).on("click", ".letter", function(e){
 					sound = "score";
 					$("#current_guess").addClass("blink_me");
 					GUESSED[CURWORD_UNSUFFLED].push(GUESS_STR);
-					let extraletters = GUESS_STR.length-(MIN_LEN-1);
-					let score_add = Math.pow(extraletters, 3);
+					let extraletters = GUESS_STR.length-MIN_LEN; // guess = 5, min = 5, extra = 0
+					// diffs:         2   4  6  8   10  12  14  16  18  20
+					let scorelist = [1, 3, 7, 13, 21, 31, 43, 57, 73, 91, 111];
+					let score_add = scorelist[extraletters];
 					player_score += score_add;
 					draw_random_star(extraletters);
+					
+					push_mywordlist(score_add);
 					
 					$("#curscore").html("+"+score_add);
 					$("#curscore").addClass("scoreblink");
@@ -417,6 +421,16 @@ $(document).on("click", ".letter", function(e){
 	}
 });
 
+
+function clear_mywordlist(){
+	$("#wordlist").empty();
+}
+
+function push_mywordlist(last_score){
+	let words = GUESSED[CURWORD_UNSUFFLED];
+	let last_word = words[words.length-1];
+	$("#wordlist").prepend($("<div>"+"(+"+last_score+") "+last_word+"</div>"));
+}
 
 
 
@@ -513,6 +527,7 @@ $(document).on("click", "#new_word", function(e){
 	GUESS = [];
 	render_guess();
 	new_random_word();
+	clear_mywordlist();
 	play_sound("next");
 	$("#new_word").removeClass("completed_blink");
 });
@@ -853,8 +868,8 @@ function draw_star(x, y, diameter, angle, drawblack, fullopacity){
 
 // Will execute myCallback every 0.5 seconds 
 var star_interval = null;
-var star_start_time = 0;
-var star_size = 0;
+
+
 var clear_star = 0;
 var star_frames = 20;
 
@@ -882,7 +897,7 @@ function draw_star_callback(){
 
 
 
-
+// i = 0...10 etc.
 function draw_random_star(i){
 	if(star_interval !== null){
 		// if already some star drawing process in progress; finish current star drawing to end size:
@@ -892,21 +907,19 @@ function draw_random_star(i){
 		draw_star(star.x, star.y, star.size, star.angle, false, true);
 		star.frame++;
 	}
-	star_start_time = getTimeMillis();
-	star_size = i;
 	
 	let x = Math.random()*window.innerWidth;
 	let y = Math.random()*window.innerHeight;
 	let angle = Math.random()*90.0;
 	let lens = [40, 80, 140, 200, 250, 340, 460, 600];
 	
-	if(i < 1) i = 1;
+	if(i < 0) i = 0;
 	if(i > lens.length-1) i = lens.length-1;
 
 	star = {
 		x: x,
 		y: y,
-		size: lens[i-1],
+		size: lens[i],
 		angle: angle,
 		frame: 0,
 	};

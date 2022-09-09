@@ -175,7 +175,10 @@ body, html {
 	width:60%;
 	float:left;
 	background-color:rgba(0,0,0, 0.2);
-	display:none;
+	--display:none;
+	font-size:25px;
+	text-shadow: #000000 1px 1px 0;
+	padding-right:5px;
 }
 #word_from {
 	margin-bottom:40px;
@@ -201,6 +204,7 @@ body, html {
 #possible_list {
 	color:#FFFFFF;
 	font-size:20px;
+	text-shadow: #000000 1px 1px 0;
 }
 
 #possible_count {
