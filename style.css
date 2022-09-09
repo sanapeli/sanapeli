@@ -127,6 +127,7 @@ body, html {
 	background-color:rgba(13,25,64, 0.6);
 	cursor:pointer;
 	color:#FFFFFF;
+	font-size:30px;
 }
 .letterbox {
 	min-height:50px;
