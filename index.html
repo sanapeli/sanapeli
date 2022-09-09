@@ -25,7 +25,7 @@
 	
 	<script type="text/javascript" src="words_all.js"></script>
 	
-	<link type="text/css" href="style.css?v=7" rel="Stylesheet" />
+	<link type="text/css" href="style.css?v=8" rel="Stylesheet" />
 </head>
 
 
@@ -329,12 +329,12 @@ function render_guess(){
 	let empty_letters = MIN_LEN-GUESS.length;
 	if(empty_letters > 0){
 		for(let i = 0; i < empty_letters; i++){
-			$("#current_guess").append($("<span class='letter empty'></span>").html("&nbsp;"));
+			$("#current_guess").append($("<span class='letter linear empty'></span>").html("&nbsp;"));
 		}
 	}
 	for(let i = 0; i < GUESS.length; i++){
 		let letter = GUESS[i];
-		$("#current_guess").append($("<span class='letter guess' data-index='"+i+"'></span>").text(letter));
+		$("#current_guess").append($("<span class='letter linear guess' data-index='"+i+"'></span>").text(letter));
 	}
 
 	render_remaining();
