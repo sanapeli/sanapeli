@@ -1113,7 +1113,8 @@ $(document).ready(function(){
 	console.log("ready");
 
 	resize_elements();
-	
+	update_play_style();
+		
 	WORDS = [];
 	for(let i = 0; i < ALL_WORDS.length; i++){
 		if(ALL_WORDS[i].length >= MIN_LEN && ALL_WORDS[i].length <= MAX_LEN){
@@ -1124,8 +1125,6 @@ $(document).ready(function(){
 	build_scrabble_letterlist();
 	
 	random_scrabble_letters();
-	
-	update_play_style();
 	
 	generate_sounds();
 	
