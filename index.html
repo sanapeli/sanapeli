@@ -394,8 +394,9 @@ $(document).on("click", ".letter", function(e){
 					$("#current_guess").addClass("blink_me");
 					GUESSED[CURWORD_UNSUFFLED].push(GUESS_STR);
 					let extraletters = GUESS_STR.length-MIN_LEN; // guess = 5, min = 5, extra = 0
-					// diffs:         2   4  6  8   10  12  14  16  18  20
-					let scorelist = [1, 3, 7, 13, 21, 31, 43, 57, 73, 91, 111];
+					// diffs:           2   4  6  8  10     12  14  16  18  20
+					//let scorelist = [1, 3, 7, 13, 21, 31, 43, 57, 73, 91, 111];
+					let scorelist   = [10, 31, 62, 113, 244, 310, 430, 570, 730, 910, 1110];
 					let score_add = scorelist[extraletters];
 					player_score += score_add;
 					draw_random_star(extraletters);
