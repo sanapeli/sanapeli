@@ -25,7 +25,7 @@
 	
 	<script type="text/javascript" src="words_all.js"></script>
 	
-	<link type="text/css" href="style.css?v=2" rel="Stylesheet" />
+	<link type="text/css" href="style.css?v=3" rel="Stylesheet" />
 </head>
 
 
@@ -58,21 +58,25 @@ html, body {
 	<div style="width:100%; text-align:left">
 	<div id="scores"></div>
 	</div>
-	<div id="give_hint" class="button">Vihje</div><div id="new_word" class="button">Uusi&nbsp;sana</div>
+	<div id="give_hint" class="button left">Vihje</div><div id="new_word" class="button right">Uusi&nbsp;sana</div>
 	<div id="sanakirja"></div>
 	<div id="curscore"></div>
 	<!--<span class="really invisible"></span>-->
 	<div id="current_guess" class="letterbox"></div>
-	<div id="word_from" class="letterbox"></div>
+	
+	<div>
+		<div id="wordlist"></div>
+		<div id="word_from" class="letterbox"></div>
+	</div>
 	
 	<br>
 	<div id="clear_guess_wrap">
-		<div id="randomize" class="button">Randomoi</div><div id="clear_guess" class="button disabled">Tyhjennä</div>
+		<div id="mywords" class="button left">Omat</div><div id="randomize" class="button middle">Randomoi</div><div id="clear_guess" class="button right disabled">Tyhjennä</div>
 	</div>
 
 	<div id="possible_list">
-	<span id="possible_count"></span>
-	<div id="possible_words" style="display:none"></div>
+		<span id="possible_count"></span>
+		<div id="possible_words" style="display:none"></div>
 	</div>
 
 	<div id="result"></div>
@@ -98,7 +102,7 @@ var GUESS = [];
 var POSSIBLE = [];
 
 var player_score = 0;
-
+var wordlist_visible = 0;
 
 
 
@@ -106,6 +110,7 @@ var CACHED_SOUND_EFFECTS = {};
 
 
 var SOUNDS = {
+	showhide: [1,3,0.219375,0.070448,0.264728,0.246,0.940782,0,-0.359019,0,0.276075,0.558813,0,0,0,0,0,0,0,1,0,0,0.909348,0,0.252],
 	complete: [1,0,0,0.414,0.092,0.851,0.269,0,0.391888,0,0,0.787,0.027,0.033,0.082,-0.489,0.463,0.002,0.001,1,0,0,0,0,0.204],
 	explosion: [1,3,0,0.287594,0.51717,0.855,0.117312,0,0,0,0.652,0.66,0,0,0,0,0,-0.146964,-0.004699,    1,0,0,0,0,0.25],
 	hint: [1,3,0.2034,0.519972,0.079301,0.420554,0.503805,0,0.019718,-0.113554,0.02742,-0.960806,0.437405,-0.928749,0.31182,0.242098,-0.059401,0.008261,-0.0102,0.205988,0.046432,0.574843,0.114387,0.001109,0.1068],
@@ -430,7 +435,7 @@ function update_ui(){
 		$(".really").addClass("invisible");
 	}
 	
-	$("#scores").html("Pisteet: "+player_score);
+	$("#scores").html(player_score);
 	
 }
 
@@ -473,6 +478,18 @@ $(document).on("click", "#give_hint", function(e){
 		give_hint(hint);
 		play_sound("hint");
 	}
+});
+
+
+
+$(document).on("click", "#mywords", function(e){
+	wordlist_visible ^= 1;
+	if(wordlist_visible){
+		$("#wordlist").show();
+	}else{
+		$("#wordlist").hide();
+	}
+	play_sound("showhide");
 });
 
 
@@ -677,7 +694,11 @@ function colorBetweenRGBA_array(arr, percent){
 
 
 
-function draw_star(x, y, diameter, angle){
+function draw_star(x, y, diameter, angle, drawblack, fullopacity){
+
+	if(typeof fullopacity === "undefined"){
+		fullopacity = true;
+	}
 
 	let linelen = diameter;
 	let hlen = diameter/2;
@@ -690,7 +711,7 @@ function draw_star(x, y, diameter, angle){
 	let arr1 = [0xFF0000, 0xFFFF00, 0x00FFFF, 0x0000FF, 0xFF00FF, 0xFF0000];
 	let arr2 = [0xFF8888, 0xFFFF88, 0x88FFFF, 0x8888FF, 0xFF88FF, 0xFF8888];
 	let cindex1 = Math.random();
-	let cindex2 = cindex1+0.1;
+	let cindex2 = cindex1+0.05;
 	if(cindex2 > 1){
 		cindex2 = cindex2-1;
 	}
@@ -699,19 +720,37 @@ function draw_star(x, y, diameter, angle){
 	
 	let rgb1 = c1.r+","+c1.g+","+c1.b;
 	let rgb2 = c2.r+","+c2.g+","+c2.b;
+	let rgb3 = "255,255,255";
+	
+	if(drawblack){
+		rgb1 = "0,0,0";
+		rgb2 = "0,0,0";
+		rgb3 = "0,0,0";
+	}
+	
+	let opa1;
+	let opa2;
+	
+	if(fullopacity){
+		opa1 = 0.8;
+		opa2 = 0.1;
+	}else{
+		opa1 = 0.2;
+		opa2 = 0.1;
+	}
 
 	{
+		console.log("linelen: "+linelen);
 		var grad = ctx.createRadialGradient(x, y, 0, x, y, linelen);
-		grad.addColorStop(0, "rgba("+rgb1+",1)");
+		grad.addColorStop(0, "rgba("+rgb1+","+opa1+")");
 		grad.addColorStop(1, "rgba("+rgb1+",0)");
 		
-		
 		var grad2 = ctx.createRadialGradient(x, y, 0, x, y, linelen);
-		grad2.addColorStop(0, "rgba(255,255,255,1)");
-		grad2.addColorStop(1, "rgba(255,255,255,0)");
+		grad2.addColorStop(0, "rgba("+rgb3+","+opa1+")");
+		grad2.addColorStop(1, "rgba("+rgb3+",0)");
 		
 		var grad3 = ctx.createRadialGradient(x, y, 0, x, y, linelen);
-		grad3.addColorStop(0, "rgba("+rgb2+",0.4)");
+		grad3.addColorStop(0, "rgba("+rgb2+","+opa2+")");
 		grad3.addColorStop(1, "rgba("+rgb2+",0)");
 		
 		
@@ -770,8 +809,8 @@ function draw_star(x, y, diameter, angle){
 		
 		
 		ctx.strokeStyle = grad2;
-		
 		ctx.lineWidth = diameter/20;
+	
 		ctx.beginPath();
 		{
 			// 90 deg:
@@ -786,6 +825,7 @@ function draw_star(x, y, diameter, angle){
 			}
 		}
 		ctx.stroke();
+
 	}	
 	
 	
@@ -793,7 +833,7 @@ function draw_star(x, y, diameter, angle){
 	
 	{
 		var grad = ctx.createRadialGradient(x, y, 0, x, y, hlen);
-		grad.addColorStop(0, "rgba(255,255,255,1)");
+		grad.addColorStop(0, "rgba("+rgb3+","+opa1+")");
 		grad.addColorStop(1, "rgba("+rgb1+",0)");
 		ctx.strokeStyle = grad;
 		
@@ -811,19 +851,79 @@ function draw_star(x, y, diameter, angle){
 }
 
 
+// Will execute myCallback every 0.5 seconds 
+var star_interval = null;
+var star_start_time = 0;
+var star_size = 0;
+var clear_star = 0;
+var star_frames = 20;
+
+var star = {
+	x: 0,
+	y: 0,
+	angle: 0,
+	size: 0,
+	frame: 0,
+};
+
+function draw_star_callback(){
+	if(star.frame >= star_frames){
+		window.clearInterval(star_interval);
+		star_interval = null;
+		// draw last star full opacty:
+		draw_star(star.x, star.y, star.size*(star.frame/star_frames), star.angle, false, true);
+		star.frame++;
+	}else{	
+		draw_star(star.x, star.y, star.size*(star.frame/star_frames), star.angle, false, false);
+		star.frame++;
+		clear_star ^= 1;
+	}
+}
+
 
 
 
 function draw_random_star(i){
+	if(star_interval !== null){
+		// if already some star drawing process in progress; finish current star drawing to end size:
+		window.clearInterval(star_interval);
+		star_interval = null;
+		// draw last star full opacty:
+		draw_star(star.x, star.y, star.size, star.angle, false, true);
+		star.frame++;
+	}
+	star_start_time = getTimeMillis();
+	star_size = i;
+	
 	let x = Math.random()*window.innerWidth;
 	let y = Math.random()*window.innerHeight;
 	let angle = Math.random()*90.0;
-	//let size = Math.pow(extraletters, 3)*0.75+40;
+	let lens = [40, 80, 140, 200, 250, 340, 460, 600];
+	
+	if(i < 1) i = 1;
+	if(i > lens.length-1) i = lens.length-1;
+
+	star = {
+		x: x,
+		y: y,
+		size: lens[i-1],
+		angle: angle,
+		frame: 0,
+	};
+
+	star_interval = window.setInterval(draw_star_callback, 80);
+}
+
+
+function draw_random_star2(i){
+	let x = Math.random()*window.innerWidth;
+	let y = Math.random()*window.innerHeight;
+	let angle = Math.random()*90.0;
 	let lens = [40, 80, 140, 200, 250, 340];
 	
 	if(i < 0) i = 0;
 	if(i > lens.length-1) i = lens-length-1;
-	//console.log(i);
+
 	draw_star(x, y, lens[i], angle);
 }
 
@@ -831,7 +931,7 @@ function draw_random_star(i){
 
 
 $("#game").click(function(){
-	//draw_random_star(Math.floor(Math.random()*6+1));
+	draw_random_star(Math.floor(Math.random()*6+1));
 });
 
 
