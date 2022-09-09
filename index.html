@@ -593,8 +593,9 @@ function get_remaining_guesses(){
 
 function render_remaining(){
 	let curpossible = get_remaining_guesses();//POSSIBLE.length;
+	let foundnow = GUESSED[CURWORD_UNSUFFLED].length;
 	$('#possible_words').html(curpossible.join(", "));
-	$('#possible_count').html("Mahdollisia sanoja: "+curpossible.length+" kpl");
+	$('#possible_count').html("Löydetty: "+foundnow+" kpl, Mahdollisia: "+curpossible.length+" kpl");
 }
 
 
