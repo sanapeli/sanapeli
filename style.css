@@ -57,16 +57,18 @@ body, html {
 	cursor:pointer;
 	min-width:40px;
 	font-size:50px;
+    text-shadow: rgb(0, 0, 0, 0.5) -2px 2px;
 }
 
 
-
+/*
 .letter:first-child {
 	border-left:1px solid #9b9b3d;
 }
 .letter:last-child {
 	border-right:1px solid #9b9b3d;
 }
+*/
 
 
 .letter.used {
@@ -118,7 +120,7 @@ body, html {
 
 .button {
 	border:1px solid #3d499b;
-	border-radius: 6px;
+	border-radius: 12px;
 	margin:1px;
 	padding:2px 15px 6px 15px;
 	//text-transform:uppercase;
@@ -134,7 +136,6 @@ body, html {
 }
 
 .button.middle {
-	border-left:0;
 	border-right:0;
 	margin-left:0;
 	margin-right:0;
@@ -144,6 +145,7 @@ body, html {
 	border-top-right-radius:0;
 	border-bottom-right-radius:0;
 	margin-right:0;
+	border-right:0;
 }
 .button.right {
 	border-top-left-radius:0;
@@ -168,18 +170,19 @@ body, html {
 }
 
 #wordlist {
-	border:2px solid rgba(0,0,0, 0.5);
-	border-radius:7px;
+	--border:2px solid rgba(0,0,0, 0.5);
+	--border-radius:7px;
 	overflow-y:hidden;
 	height:210px;
 	max-height:210px;
-	width:60%;
+	width:45%;
 	float:left;
-	background-color:rgba(0,0,0, 0.2);
+	--background-color:rgba(0,0,0, 0.2);
 	--display:none;
-	font-size:25px;
-	text-shadow: #000000 1px 1px 0;
-	padding-right:5px;
+	font-size:20px;
+	text-shadow: #000000 1px 1px;
+	--padding-right:5px;
+	color:rgba(255,255,136, 0.5);
 }
 #word_from {
 	margin-bottom:40px;
@@ -191,11 +194,12 @@ body, html {
 }
 #current_guess {
 	margin-bottom:10px;
-	min-height:100px;
+	min-height:140px;
+	margin-top: 180px;
 }
 
 #clear_guess {
-	margin-bottom:20px;
+	margin-bottom:10px;
 }
 
 #clear_guess_wrap {
@@ -203,9 +207,9 @@ body, html {
 }
 
 #possible_list {
-	color:#FFFFFF;
+	color:#FFFF88;
 	font-size:20px;
-	text-shadow: #000000 1px 1px 0;
+	text-shadow: #000000 1px 1px;
 }
 
 #possible_count {
@@ -219,20 +223,37 @@ body, html {
 
 #scores {
 	color:#FFFF00;
-	font-size:30px;
-	margin-top:20px;
-	margin-bottom:20px;
-	margin-left:10px;
-	
+	font-size:30px;	
 	display:inline-block;
 	padding:3px 7px 3px 7px;
 	border:2px solid black;
 	border-radius: 5px;
 	background-color:rgba(0,0,0, 0.6);
+	border:2px dotted rgba(255,255,0, 0.35);
+	
+	position:absolute;
+	top:100px;
+	left:10px;
+}
+
+#topbuttons {
+	width: 100%;
+    position: absolute;
+    top: 30px;
+}
+
+#curscore {
+	opacity:0;
+	
+	position: absolute;
+    top: 140px;
+    right: 0;
 }
 
 #sanakirja {
-	min-height:80px;
+    position: absolute;
+    top: 100px;
+    right: 0;
 }
 
 .blink_me .letter {
@@ -300,10 +321,6 @@ body, html {
 
 
 
-#curscore {
-	opacity:0;
-	min-height:80px;
-}
 
 .scoreblink {
 	animation: score_blinker 0.1s ease-out;

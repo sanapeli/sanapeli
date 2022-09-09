@@ -25,7 +25,7 @@
 	
 	<script type="text/javascript" src="words_all.js"></script>
 	
-	<link type="text/css" href="style.css?v=5" rel="Stylesheet" />
+	<link type="text/css" href="style.css?v=7" rel="Stylesheet" />
 </head>
 
 
@@ -56,9 +56,11 @@ html, body {
 <div id="game" class="noselect">
 
 	<div style="width:100%; text-align:left">
-	<div id="scores"></div>
+	<div id="scores" class="invisible"></div>
 	</div>
-	<div id="give_hint" class="button left">Vihje</div><div id="new_word" class="button right">Uusi&nbsp;sana</div>
+	<div id="topbuttons">
+		<div id="mywords" class="button left">Omat</div><div id="give_hint" class="button middle">Vihje</div><div id="new_word" class="button right">Uusi&nbsp;sana</div>
+	</div>
 	<div id="sanakirja"></div>
 	<div id="curscore"></div>
 	<!--<span class="really invisible"></span>-->
@@ -71,7 +73,7 @@ html, body {
 	
 	<br>
 	<div id="clear_guess_wrap">
-		<div id="mywords" class="button left">Omat</div><div id="randomize" class="button middle">Randomoi</div><div id="clear_guess" class="button right disabled">Tyhjennä</div>
+		<div id="randomize" class="button left">Sekoita</div><div id="clear_guess" class="button right disabled">Tyhjennä</div>
 	</div>
 
 	<div id="possible_list">
@@ -397,6 +399,9 @@ $(document).on("click", ".letter", function(e){
 					let score_add = scorelist[extraletters];
 					player_score += score_add;
 					draw_random_star(extraletters);
+					if($("#scores").hasClass("invisible")){
+						$("#scores").removeClass("invisible");
+					}
 					
 					push_mywordlist(score_add);
 					
@@ -429,7 +434,7 @@ function clear_mywordlist(){
 function push_mywordlist(last_score){
 	let words = GUESSED[CURWORD_UNSUFFLED];
 	let last_word = words[words.length-1];
-	$("#wordlist").prepend($("<div>"+"(+"+last_score+") "+last_word+"</div>"));
+	$("#wordlist").prepend($("<div>"+"+"+last_score+" "+last_word+"</div>"));
 }
 
 
@@ -597,7 +602,7 @@ function new_random_word(){
 		if(!found){
 			POSSIBLE = get_possible_words(CURWORD, MIN_LEN);
 		}
-	}while(POSSIBLE.length < 6);
+	}while(POSSIBLE.length < 20);
 	
 	//CURWORD = "ydinsota";
 	//POSSIBLE = get_possible_words(CURWORD, MIN_LEN);
