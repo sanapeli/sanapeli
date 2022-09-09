@@ -984,6 +984,13 @@ $(document).ready(function(){
 });
 
 
+
+$(window).bind('beforeunload', function(){
+	return 'Are you sure you want to leave?'; // modern browsers will show their own message instead of this.
+});
+
+
+
 </script>
 
 
