@@ -25,7 +25,7 @@
 	
 	<script type="text/javascript" src="words_all.js"></script>
 	
-	<link type="text/css" href="style.css?v=10" rel="Stylesheet" />
+	<link type="text/css" href="style.css?v=13" rel="Stylesheet" />
 </head>
 
 
@@ -350,7 +350,7 @@ $(document).on("click", ".letter", function(e){
 		
 		let clicked_letter = $(this).text();
 		//$(this).addClass("used");
-		console.log(clicked_letter);
+		//console.log(clicked_letter);
 		
 		let sound = "click";
 		
@@ -379,9 +379,9 @@ $(document).on("click", ".letter", function(e){
 		
 		if(GUESS_STR == CURWORD_UNSUFFLED){
 			sound = "really";
-			console.log(GUESS_STR+" == "+CURWORD_UNSUFFLED);
+			//console.log(GUESS_STR+" == "+CURWORD_UNSUFFLED);
 		}else{
-			console.log(GUESS_STR+" != "+CURWORD_UNSUFFLED);
+			//console.log(GUESS_STR+" != "+CURWORD_UNSUFFLED);
 			// check guess:
 			let correct_guess = POSSIBLE.includes(GUESS_STR);
 			let already_guessed = GUESSED[CURWORD_UNSUFFLED].includes(GUESS_STR);
@@ -412,7 +412,7 @@ $(document).on("click", ".letter", function(e){
 					$("#curscore").html("+"+score_add);
 					$("#curscore").addClass("scoreblink");
 					
-					$("#sanakirja").html("<a href='https://www.suomisanakirja.fi/amp/"+GUESS_STR+"' target='reference'>"+GUESS_STR+"</a>");
+					$("#sanakirja").html(sanakirjalink(GUESS_STR, GUESS_STR));
 					
 					let remaining = get_remaining_guesses();
 					if(remaining.length == 0){
@@ -431,6 +431,11 @@ $(document).on("click", ".letter", function(e){
 });
 
 
+function sanakirjalink(word, inside){
+	return "<a href='https://www.suomisanakirja.fi/amp/"+word+"' target='reference'>"+inside+"</a>";
+}
+
+
 function clear_mywordlist(){
 	$("#wordlist").empty();
 }
@@ -438,7 +443,7 @@ function clear_mywordlist(){
 function push_mywordlist(last_score){
 	let words = GUESSED[CURWORD_UNSUFFLED];
 	let last_word = words[words.length-1];
-	$("#wordlist").prepend($("<div>"+"+"+last_score+" "+last_word+"</div>"));
+	$("#wordlist").prepend($("<div>"+sanakirjalink(last_word, "+"+last_score+" "+last_word)+"</div>"));
 }
 
 
@@ -473,7 +478,7 @@ function shuffleArray(array) {
 
 
 function give_hint(hint){
-	console.log("hint = "+hint+" = .letter_"+hint[0]);
+	//console.log("hint = "+hint+" = .letter_"+hint[0]);
 	set_word_buttons();
 	let letcounts = {};
 	letcounts[hint[0]] = 0;
@@ -719,7 +724,9 @@ function colorBetweenRGBA_array(arr, percent){
 
 
 function draw_star(x, y, diameter, angle, drawblack, fullopacity){
-
+	if(typeof drawblack === "undefined"){
+		drawblack = false;
+	}
 	if(typeof fullopacity === "undefined"){
 		fullopacity = true;
 	}
@@ -764,7 +771,6 @@ function draw_star(x, y, diameter, angle, drawblack, fullopacity){
 	}
 
 	{
-		console.log("linelen: "+linelen);
 		var grad = ctx.createRadialGradient(x, y, 0, x, y, linelen);
 		grad.addColorStop(0, "rgba("+rgb1+","+opa1+")");
 		grad.addColorStop(1, "rgba("+rgb1+",0)");
@@ -973,16 +979,17 @@ $(document).ready(function(){
 	
 	//load_db();
 	
+
 	/*
-	
 	for(let i = 0; i < 120; i++){
 		let x = Math.random()*window.innerWidth;
 		let y = Math.random()*window.innerHeight;
 		let angle = Math.random()*90.0;
-		let size = 10+Math.random()*60;
+		let size = 220+Math.random()*120;
 		draw_star(x, y, size, angle);
 	}
 	*/
+
 	
 	new_random_word();
 });

@@ -81,10 +81,19 @@ body, html {
 
 
 .letter.empty {
-	background-color:rgba(166,100,0, 0.15);
-	border-color:rgba(255,255,128, 0.2);
+	background-color:rgba(82, 50, 0, 0.4);
+	border-color:rgba(0,0,0, 0.2);
 	cursor:auto;
 }
+
+.letter.empty:first-child {
+	border-left: 1px solid rgb(24, 24, 24, 0.4);
+}
+.letter.empty:last-child {
+	border-right: 1px solid rgb(24, 24, 24, 0.4);
+}
+
+
 
 .letter.empty:hover {
 	
@@ -180,11 +189,22 @@ body, html {
 	--background-color:rgba(0,0,0, 0.2);
 	--display:none;
 	font-size:20px;
-	text-shadow: #000000 1px 1px;
+	text-shadow: rgba(0,0,0, 0.7) -1px 1px;
 	padding-right:5px;
 	text-transform:uppercase;
 	color:rgba(255,255,136, 0.5);
+	letter-spacing:2px;
 }
+
+#wordlist a:link {
+	color:rgba(255,255,136,0.8);
+	text-decoration:none;
+}
+#wordlist a:visited {
+	color:rgba(177,177,81,0.8);
+	text-decoration:none;
+}
+
 
 /* width */
 #wordlist::-webkit-scrollbar {
@@ -282,12 +302,17 @@ body, html {
     right: 5px;
 	--text-transform: capitalize;
 }
+#sanakirja a {
+	background-color: rgba(0,0,0,0.7);
+	border-radius: 8px;
+	padding: 0px 10px 3px 10px;
+}
 
 #sanakirja a:link {
-	color:#28289d;
+	color:#ffff88;
 }
 #sanakirja a:visited {
-	color:#621459;
+	color:#707020;
 }
 
 .blink_me .letter {
