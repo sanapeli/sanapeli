@@ -53,8 +53,11 @@ body, html {
 }
 
 .letter {
-	border-top:1px solid #9b9b3d;
-	border-bottom:1px solid #9b9b3d;
+	border-top: 1px solid #7c7c32;
+	border-right: 1px solid #3c3c18;
+    border-bottom: 1px solid #060602;
+    border-left: 1px solid #0c0c04;
+	
 	border-radius: 6px;
 	margin:1px;
 	padding:2px 0px 2px 13px;
@@ -71,7 +74,11 @@ body, html {
 .letter.clicked {
 	background-color:rgba(15,15,3, 0.8);
 	color: rgba(205,205,86, 0.5);
-	border-color:black;
+	
+    border-top: 1px solid #060602;
+    border-right: 1px solid #0c0c04;
+    border-bottom: 1px solid #1e1e0c;
+    border-left: 1px solid #1e1e0c;
 }
 
 
@@ -110,10 +117,10 @@ body, html {
 
 
 .letter.linear:first-child {
-	border-left:1px solid #9b9b3d;
+	--border-left:1px solid #9b9b3d;
 }
 .letter.linear:last-child {
-	border-right:1px solid #9b9b3d;
+	--border-right:1px solid #9b9b3d;
 }
 
 
@@ -396,7 +403,7 @@ body, html {
 	border-radius: 11px;
 	border-top-right-radius:0px;
 	border-bottom-right-radius:0px;
-    padding: 0px 10px 4px 20px;
+    padding: 0px 10px 4px 12px;
     font-size: 30px;
 }
 #sanakirja_wrap a {
