@@ -73,7 +73,7 @@ body, html {
 
 .letter.clicked {
 	background-color:rgba(15,15,3, 0.8);
-	color: rgba(205,205,86, 0.5);
+	color: rgba(149, 149, 92, 0.5);
 	
     border-top: 1px solid #060602;
     border-right: 1px solid #0c0c04;
