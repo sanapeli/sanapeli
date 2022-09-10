@@ -497,6 +497,31 @@ body, html {
 	}
 }
 
+
+
+.scoreblink2 {
+	animation: score_blinker2 0.1s ease-out;
+	animation-iteration-count: 10;
+	animation-fill-mode: forwards;
+}
+
+@keyframes score_blinker2 {
+	0% {
+		opacity: 1;
+		color:#0000FF;
+	}
+	50% {
+		opacity: 0;
+		color:#FF0000;
+	}
+	100% {
+		opacity: 1;
+		color:#FFDD00;
+	}
+}
+
+
+
 .completed_blink {
 	animation: completed_blinker 0.1s ease-out;
 	animation-iteration-count: 7;

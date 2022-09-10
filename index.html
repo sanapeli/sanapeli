@@ -25,7 +25,7 @@
 	
 	<script type="text/javascript" src="words_all.js"></script>
 	
-	<link type="text/css" href="style.css?v=24" rel="Stylesheet" />
+	<link type="text/css" href="style.css?v=25" rel="Stylesheet" />
 </head>
 
 
@@ -452,7 +452,7 @@ $(document).on("click", ".letter", function(e){
 		$("#current_guess").removeClass("blink_me");
 		// no idea why i cant remove it just before adding it... this is only way it to work.
 		$("#curscore").removeClass("scoreblink");
-		$("#scores").removeClass("scoreblink");
+		$("#scores").removeClass("scoreblink2");
 		
 		if(GUESS_STR == CURWORD_UNSUFFLED){
 			sound = "really";
@@ -513,7 +513,7 @@ $(document).on("click", ".letter", function(e){
 
 					$("#curscore").html("+"+score_add);
 					$("#curscore").addClass("scoreblink");
-					$("#scores").addClass("scoreblink");
+					$("#scores").addClass("scoreblink2");
 					
 					$("#sanakirja_link").html(sanakirjalink(GUESS_STR, GUESS_STR));
 					$("#sanakirja_wrap").removeClass("invisible");
@@ -733,8 +733,8 @@ function get_remaining_guesses(){
 function render_remaining(){
 	let curpossible = get_remaining_guesses();
 	let foundnow = GUESSED[CURWORD_UNSUFFLED].length;
-	$('#possible_words').html(curpossible.join(", "));
 	$('#possible_count').html("Löydetty: "+foundnow+" kpl, Mahdollisia: "+curpossible.length+" kpl");
+	$('#possible_words').html("<br><br><br><br>"+curpossible.join(", ")+"<br><br>");
 }
 
 /*
