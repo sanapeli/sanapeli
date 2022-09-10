@@ -25,7 +25,7 @@
 	
 	<script type="text/javascript" src="words_all.js"></script>
 	
-	<link type="text/css" href="style.css?v=22" rel="Stylesheet" />
+	<link type="text/css" href="style.css?v=23" rel="Stylesheet" />
 </head>
 
 
@@ -59,6 +59,7 @@ html, body {
 
 	<div id="topbuttons">
 		<div id="mywords" class="button left">Omat</div><div id="give_hint" class="button middle">Vihje</div><div id="new_word" class="button middle">Uusi&nbsp;sana</div>
+		
 	</div>
 	<div id="sanakirja_wrap" class="invisible"><span id="curscore"></span><span id="sanakirja_link"></span></div>
 	
@@ -78,9 +79,6 @@ html, body {
 		<span id="possible_count"></span>
 		<div id="possible_words" style="display:none"></div>
 	</div>
-
-	<div id="result"></div>
-
 </div>
 
 
@@ -1248,7 +1246,7 @@ $(document).ready(function(){
 	
 
 
-	let devmode = 0;
+	let devmode = 10;
 	if(devmode){
 		for(let i = 0; i < 120; i++){
 			let x = Math.random()*window.innerWidth;

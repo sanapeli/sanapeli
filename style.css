@@ -132,9 +132,9 @@ body, html {
     font-size: 35px;
     width: 50px;
     min-width: 50px;
+	
+	margin:0px;
 }
-
-
 
 
 .letter.empty {
@@ -145,6 +145,8 @@ body, html {
 	font-size: 35px;
     width: 50px;
     min-width: 50px;
+	
+	margin:0px;
 }
 
 
@@ -318,9 +320,9 @@ body, html {
 	right: 0;
 }
 #current_guess {
-	margin-bottom:10px;
-	min-height:140px;
-	margin-top: 180px;
+    position: absolute;
+    top: 200px;
+    right: 2px;
 }
 
 #clear_guess {
