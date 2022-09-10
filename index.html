@@ -25,7 +25,7 @@
 	
 	<script type="text/javascript" src="words_all.js"></script>
 	
-	<link type="text/css" href="style.css?v=27" rel="Stylesheet" />
+	<link type="text/css" href="style.css?v=29" rel="Stylesheet" />
 </head>
 
 
@@ -71,14 +71,20 @@ html, body {
 		<div id="word_from" class="letterbox"></div>
 	</div>
 	
+	<div id="possible_list1">
+		<div id="possible_bar"><div id="bar_done"></div></div>
+		<div id="possible_count1"></div>
+		<div id="possible_count2"></div>
+		
+	</div>
 	<div id="clear_guess_wrap">
 		<div id="changestyle" class="button left">.....</div><div id="randomize" class="button middle">Sekoita</div><div id="clear_guess" class="button middle disabled">Tyhjää</div>
 	</div>
-
-	<div id="possible_list">
-		<span id="possible_count"></span>
+	
+	<div id="possible_list2">
 		<div id="possible_words" style="display:none"></div>
 	</div>
+
 </div>
 
 
@@ -468,7 +474,12 @@ $(document).on("click", ".letter", function(e){
 					sound = "already";
 				}else{
 					sound = "score";
-					$("#current_guess").addClass("blink_me");
+
+					$("#current_guess").removeClass("blink_me");
+					setTimeout(function(){
+						$("#current_guess").addClass("blink_me");
+					}, 100);
+					
 					GUESSED[CURWORD_UNSUFFLED].push(GUESS_STR);
 					
 					let extraletters = GUESS_STR.length-MIN_LEN; // guess = 5, min = 5, extra = 0
@@ -482,7 +493,7 @@ $(document).on("click", ".letter", function(e){
 						score_add = scorelist[extraletters];
 						draw_random_star(extraletters);
 					}else if(PLAY_STYLE == 1){
-						console.log(GUESS_STR+":");
+						//console.log(GUESS_STR+":");
 						for(let i = 0; i < GUESS_STR.length; i++){
 							let letter = GUESS_STR[i];
 							if(scrabble_letters.hasOwnProperty(letter)){
@@ -507,13 +518,20 @@ $(document).on("click", ".letter", function(e){
 					
 					if(PLAY_STYLE == 1){
 						take_letters_from_bag(GUESS_STR);
-						
 					}
 					
 
 					$("#curscore").html("+"+score_add);
-					$("#curscore").addClass("scoreblink");
-					$("#scores").addClass("scoreblink2");
+					
+					$("#curscore").removeClass("scoreblink");
+					setTimeout(function(){
+						$("#curscore").addClass("scoreblink");
+					}, 100);
+
+					$("#scores").removeClass("scoreblink2");
+					setTimeout(function(){
+						$("#scores").addClass("scoreblink2");
+					}, 100);
 					
 					$("#sanakirja_link").html(sanakirjalink(GUESS_STR, GUESS_STR));
 					$("#sanakirja_wrap").removeClass("invisible");
@@ -521,8 +539,16 @@ $(document).on("click", ".letter", function(e){
 					let remaining = get_remaining_guesses();
 					if(remaining.length == 0){
 						play_sound("complete");
+
 						$("#new_word").removeClass("completed_blink");
-						$("#new_word").addClass("completed_blink");
+						setTimeout(function(){
+							$("#new_word").addClass("completed_blink");
+						}, 100);
+
+						$("#bar_done").removeClass("completed_blink_bar");
+						setTimeout(function(){
+							$("#bar_done").addClass("completed_blink_bar");
+						}, 100);
 					}
 				}
 			}
@@ -635,7 +661,7 @@ function update_play_style(){
 		MIN_LEN = 5;
 		MAX_LEN = 9;
 	}else if(PLAY_STYLE == 1){
-		MINPOSSIBLE = 30;
+		MINPOSSIBLE = 20;
 		MIN_LEN = 3;
 		MAX_LEN = 9;
 	}
@@ -699,7 +725,7 @@ function getTimeMillis(){
 
 
 
-$(document).on("click", "#possible_count", function(e){
+$(document).on("click", "#possible_count2", function(e){
 	if(getTimeMillis()-prev_click_time < 400){
 		cheat_clicks++;
 		if(cheat_clicks >= 10){
@@ -733,7 +759,10 @@ function get_remaining_guesses(){
 function render_remaining(){
 	let curpossible = get_remaining_guesses();
 	let foundnow = GUESSED[CURWORD_UNSUFFLED].length;
-	$('#possible_count').html("Löydetty: "+foundnow+" kpl, Mahdollisia: "+curpossible.length+" kpl");
+	let percent = (foundnow/(foundnow+curpossible.length))*100;
+	$('#possible_count1').html("Löydetty: "+foundnow+" kpl");
+	$('#possible_count2').html("Mahdollisia: "+curpossible.length+" kpl");
+	$('#bar_done').css({"width": percent.toFixed(2)+"%"});
 	$('#possible_words').html("<br><br><br><br>"+curpossible.join(", ")+"<br><br>");
 }
 
@@ -1203,6 +1232,12 @@ function draw_random_star2(i){
 
 $("#game").click(function(){
 	//draw_random_star(Math.floor(Math.random()*6+1));
+	/*
+	$("#bar_done").removeClass("completed_blink_bar");
+	setTimeout(function(){
+		$("#bar_done").addClass("completed_blink_bar");
+	}, 100);
+	*/
 });
 
 
